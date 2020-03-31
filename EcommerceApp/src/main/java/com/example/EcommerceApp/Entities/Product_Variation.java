@@ -12,6 +12,9 @@ public class Product_Variation {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     public long getId() {
         return id;
@@ -43,5 +46,13 @@ public class Product_Variation {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

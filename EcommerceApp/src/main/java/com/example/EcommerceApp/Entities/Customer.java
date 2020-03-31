@@ -6,21 +6,18 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Customer extends User {
-    private Number contact;
-    @OneToOne(mappedBy = "cart",cascade = CascadeType.ALL)
+    private String contact;
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
     private Cart cart;
-    @Embedded
-    @OneToMany(mappedBy = "address",cascade = CascadeType.ALL)
-    private Set<Address> address;
 
-    @OneToMany(mappedBy = "orders",cascade = CascadeType.ALL)
-    private Set<Order> orders;
+   @OneToMany(mappedBy = "customer",cascade =CascadeType.ALL)
+    private Set<Orders> orders;
 
-    public Number getContact() {
+    public String getContact() {
         return contact;
     }
 
-    public void setContact(Number contact) {
+    public void setContact(String contact) {
         this.contact = contact;
     }
 
@@ -32,11 +29,11 @@ public class Customer extends User {
         this.cart = cart;
     }
 
-    public Set<Address> getAddress() {
-        return address;
+    public Set<Orders> getOrders() {
+        return orders;
     }
 
-    public void setAddress(Set<Address> address) {
-        this.address = address;
+    public void setOrders(Set<Orders> orders) {
+        this.orders = orders;
     }
 }

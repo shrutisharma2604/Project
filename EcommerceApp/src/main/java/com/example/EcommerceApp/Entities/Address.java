@@ -15,7 +15,9 @@ public class Address {
     private String label;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Customer customer;
+    private User user;
+    @ManyToOne
+    private Orders orders;
 
     public long getId() {
         return id;
@@ -73,11 +75,19 @@ public class Address {
         this.label = label;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
     }
 }

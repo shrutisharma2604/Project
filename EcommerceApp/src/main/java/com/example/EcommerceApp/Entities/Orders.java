@@ -2,9 +2,10 @@ package com.example.EcommerceApp.Entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -13,6 +14,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Customer customer;
+    @Embedded
+    @OneToMany(mappedBy = "orders",cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Set<Address> address;
 
     public long getId() {
         return id;
@@ -38,11 +43,19 @@ public class Order {
         this.dateCreated = dateCreated;
     }
 
-    public Customer getCustomer() {
+   public Customer getCustomer() {
         return customer;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Set<Address> getAddress() {
+        return address;
+    }
+
+    public void setAddress(Set<Address> address) {
+        this.address = address;
     }
 }
