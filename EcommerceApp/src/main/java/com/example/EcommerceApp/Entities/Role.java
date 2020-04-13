@@ -1,22 +1,23 @@
 package com.example.EcommerceApp.Entities;
-
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
-public class Role {
+public class Role  {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String authority;
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    public Role(){
+    }
 
-    public long getId() {
+    public Role(String authority) {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -26,5 +27,14 @@ public class Role {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", authority='" + authority + '\'' +
+                ", users=" +
+                '}';
     }
 }

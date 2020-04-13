@@ -1,32 +1,49 @@
 package com.example.EcommerceApp.Entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String name;
     private String description;
     private String brand;
+
+    private boolean isReturnable;
+    private boolean isCancellable;
     private boolean isActive;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(name = "product_seller",joinColumns = @JoinColumn(name = "product_id",referencedColumnName = "id")
-            ,inverseJoinColumns = @JoinColumn(name ="seller_id",referencedColumnName = "user_id"))
-    private Set<Seller> sellers;
+    private boolean isDeleted;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "seller_user_id")
+    private Seller seller;
 
     @OneToMany(mappedBy = "product" ,cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Product_Variation> product_variations;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private Set<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    public long getId() {
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
+    public Product(){
+
+    }
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,6 +71,22 @@ public class Product {
         this.brand = brand;
     }
 
+    public boolean isReturnable() {
+        return isReturnable;
+    }
+
+    public void setReturnable(boolean returnable) {
+        isReturnable = returnable;
+    }
+
+    public boolean isCancellable() {
+        return isCancellable;
+    }
+
+    public void setCancellable(boolean cancellable) {
+        isCancellable = cancellable;
+    }
+
     public boolean isActive() {
         return isActive;
     }
@@ -62,12 +95,20 @@ public class Product {
         isActive = active;
     }
 
-    public Set<Seller> getSellers() {
-        return sellers;
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public void setSellers(Set<Seller> sellers) {
-        this.sellers = sellers;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 
     public Set<Product_Variation> getProduct_variations() {
@@ -78,11 +119,37 @@ public class Product {
         this.product_variations = product_variations;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", brand='" + brand + '\'' +
+                ", isReturnable=" + isReturnable +
+                ", isCancellable=" + isCancellable +
+                ", isActive=" + isActive +
+                ", isDeleted=" + isDeleted +
+                ", seller=" + seller +
+                ", product_variations=" + product_variations +
+                ", category=" + category +
+                ", reviews=" + reviews +
+                '}';
     }
 }

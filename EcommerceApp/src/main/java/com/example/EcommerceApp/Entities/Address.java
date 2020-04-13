@@ -1,29 +1,40 @@
 package com.example.EcommerceApp.Entities;
-
 import javax.persistence.*;
 @Entity
-@Embeddable
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private String city;
     private String state;
     private String country;
-    private Integer zip_code;
+    private Integer zipCode;
     private String address;
     private String label;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "customer_user_id")
     private User user;
-    @ManyToOne
-    private Orders orders;
+  /*  @ManyToMany
+    private Set<Orders> orders;*/
 
-    public long getId() {
+
+    public Address(){
+
+    }
+    public Address( String city, String state, String country, Integer zipCode, String address, String label) {
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.label = label;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -51,12 +62,12 @@ public class Address {
         this.country = country;
     }
 
-    public Integer getZip_code() {
-        return zip_code;
+    public Integer getZipCode() {
+        return zipCode;
     }
 
-    public void setZip_code(Integer zip_code) {
-        this.zip_code = zip_code;
+    public void setZipCode(Integer zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getAddress() {
@@ -81,13 +92,5 @@ public class Address {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Orders getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Orders orders) {
-        this.orders = orders;
     }
 }

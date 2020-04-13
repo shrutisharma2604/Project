@@ -7,31 +7,39 @@ import java.util.Set;
 @Entity
 public class Orders {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private long amountPaid;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+    private Double amountPaid;
     private Date dateCreated;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "customer_user_id")
     private Customer customer;
-    @Embedded
-    @OneToMany(mappedBy = "orders",cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Set<Address> address;
 
-    public long getId() {
+   /* @ManyToMany(mappedBy = "orders",cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name="customer_address_city", referencedColumnName="city"),
+            @JoinColumn(name="customer_address_state", referencedColumnName="state"),
+            @JoinColumn(name="customer_address_country", referencedColumnName="country"),
+            @JoinColumn(name="customer_address_address", referencedColumnName="address"),
+            @JoinColumn(name="customer_address_zipCode", referencedColumnName="zipCode"),
+            @JoinColumn(name="customer_address_label", referencedColumnName="label")
+    })
+    private Set<Address> address;*/
+
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getAmountPaid() {
+    public Double getAmountPaid() {
         return amountPaid;
     }
 
-    public void setAmountPaid(long amountPaid) {
+    public void setAmountPaid(Double amountPaid) {
         this.amountPaid = amountPaid;
     }
 
@@ -43,19 +51,11 @@ public class Orders {
         this.dateCreated = dateCreated;
     }
 
-   public Customer getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    public Set<Address> getAddress() {
-        return address;
-    }
-
-    public void setAddress(Set<Address> address) {
-        this.address = address;
     }
 }

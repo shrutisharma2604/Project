@@ -1,39 +1,44 @@
 package com.example.EcommerceApp.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "user_id")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFilter("Seller-Filter")
 public class Seller extends User{
-    private long gst;
-    private long company_contact;
-    private String company_name;
-    @ManyToMany(mappedBy = "sellers")
+    private String gst;
+    private String companyContact;
+    private String companyName;
+    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL)
     private Set<Product> products;
 
-    public long getGst() {
+    public String getGst() {
         return gst;
     }
 
-    public void setGst(long gst) {
+    public void setGst(String gst) {
         this.gst = gst;
     }
 
-    public long getCompany_contact() {
-        return company_contact;
+    public String getCompanyContact() {
+        return companyContact;
     }
 
-    public void setCompany_contact(long company_contact) {
-        this.company_contact = company_contact;
+    public void setCompanyContact(String companyContact) {
+        this.companyContact = companyContact;
     }
 
-    public String getCompany_name() {
-        return company_name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public Set<Product> getProducts() {
@@ -43,4 +48,5 @@ public class Seller extends User{
     public void setProducts(Set<Product> products) {
         this.products = products;
     }
+
 }

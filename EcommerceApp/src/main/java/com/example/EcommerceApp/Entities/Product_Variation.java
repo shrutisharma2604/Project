@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class Product_Variation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     private Integer quantityAvailable;
     private long price;
@@ -13,7 +13,6 @@ public class Product_Variation {
     @JoinColumn(name = "product_id")
     private Product product;
     @ManyToOne
-    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     public long getId() {
@@ -54,5 +53,16 @@ public class Product_Variation {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    @Override
+    public String toString() {
+        return "Product_Variation{" +
+                "id=" + id +
+                ", quantityAvailable=" + quantityAvailable +
+                ", price=" + price +
+                ", product=" + product +
+                ", cart=" + cart +
+                '}';
     }
 }

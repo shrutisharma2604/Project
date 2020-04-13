@@ -6,21 +6,20 @@ import java.util.Set;
 @Entity
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
     private long quantity;
     private boolean isWishListItem;
     @OneToOne
-    @JoinColumn(name = "user_id")
     private Customer customer;
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
     private Set<Product_Variation> product_variations;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,5 +53,16 @@ public class Cart {
 
     public void setProduct_variations(Set<Product_Variation> product_variations) {
         this.product_variations = product_variations;
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", isWishListItem=" + isWishListItem +
+                ", customer=" + customer +
+                ", product_variations=" + product_variations +
+                '}';
     }
 }
