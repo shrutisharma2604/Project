@@ -10,8 +10,4 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface AddressRepository extends CrudRepository<Address,Long> {
-    @Modifying
-    @Transactional
-    @Query("delete from Address where id=:addressId")
-    void deleteByAddressId(@Param("addressId") Long addressId);
 }

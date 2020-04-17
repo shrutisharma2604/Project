@@ -6,6 +6,7 @@ import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.events.EmailNotificationService;
+import com.example.EcommerceApp.events.UserEmailFromToken;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.SellerRepository;
@@ -21,9 +22,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SellerService {
@@ -42,8 +45,11 @@ public class SellerService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public SellerProfileDto getSellerDetails(Long user_id){
-        Optional<Seller> seller = sellerRepository.findById(user_id);
+    @Autowired
+    UserEmailFromToken userEmailFromToken;
+
+    public SellerProfileDto getSellerDetails(Long id){
+        Optional<Seller> seller = sellerRepository.findById(id);
 
         if(seller.isPresent()){
             SellerProfileDto sellerProfileDto=new SellerProfileDto();
@@ -56,8 +62,8 @@ public class SellerService {
     }
     @Transactional
     @Modifying
-    public String updateSeller(SellerProfileDto sellerProfileDto, Long userId){
-        Optional<Seller> seller = sellerRepository.findById(userId);
+    public String updateSeller(SellerProfileDto sellerProfileDto, Long id){
+        Optional<Seller> seller = sellerRepository.findById(id);
         if(seller.isPresent()) {
             seller.get().setFirstName(sellerProfileDto.getFirstName());
             seller.get().setLastName(sellerProfileDto.getLastName());
@@ -73,8 +79,8 @@ public class SellerService {
 
     @Transactional
     @Modifying
-    public String updatePassword(Long user_id, String oldPass, String newPass, String confirmPass, HttpServletResponse httpServletResponse) {
-        Optional<User> user = userRepository.findById(user_id);
+    public String updatePassword(Long id, String oldPass, String newPass, String confirmPass, HttpServletResponse httpServletResponse) {
+        Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
             if (passwordEncoder.matches(oldPass, user.get().getPassword())) {
@@ -99,22 +105,24 @@ public class SellerService {
         return "Success";
     }
 
-    @Transactional
-    @Modifying
-    public String updateAddress(AddressDto addressDto, Long addressId,Long user_id) {
-
-        Optional<Seller> seller = sellerRepository.findById(user_id);
-        Address address = new Address();
-        BeanUtils.copyProperties(addressDto, address);
-        if (seller.isPresent()) {
-            address.setAddress(addressDto.getAddress());
-            address.setCity(addressDto.getCity());
-            addressRepository.save(address);
-            sellerRepository.save(seller.get());
-            return "Address updated";
-        } else {
-            return "Not updated";
+    public String updateAddress(Long id, SellerAddressDto addressDto, HttpServletRequest request) {
+        Optional<Address> address = addressRepository.findById(id);
+        if (!address.isPresent()) {
+            throw  new UserNotFoundException("no address fount with id " + id);
         }
-
+        Seller seller = sellerRepository.findByEmail(userEmailFromToken.getUserEmail(request));
+        Set<Address> addresses = seller.getAddresses();
+        addresses.forEach(a->{
+            if (a.getId() == address.get().getId()) {
+                a.setAddress(addressDto.getAddress());
+                a.setCity(addressDto.getCity());
+                a.setCountry(addressDto.getCountry());
+                a.setState(addressDto.getState());
+                a.setZipCode(addressDto.getZipCode());
+                a.setAddress(addressDto.getAddress());
+            }
+        });
+        sellerRepository.save(seller);
+        return "Success";
     }
 }

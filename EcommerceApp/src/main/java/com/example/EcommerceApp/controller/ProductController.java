@@ -5,5 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/product")
-public class PrductController {
+public class ProductController {
+
 }

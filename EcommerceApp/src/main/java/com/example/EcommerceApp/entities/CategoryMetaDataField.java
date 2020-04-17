@@ -1,9 +1,12 @@
 package com.example.EcommerceApp.entities;
 
+import org.codehaus.jackson.map.annotate.JsonFilter;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonFilter("MetaData-Filter")
 public class CategoryMetaDataField {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

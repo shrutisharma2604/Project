@@ -1,23 +1,23 @@
 package com.example.EcommerceApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
-@Table(name = "category_meta_data_field_value")
-public class CategoryMetaDataFieldValue implements Serializable {
+public class CategoryMetaDataFieldValue  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @MapsId("categoryId")
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "category_meta_data_field_id")
+    @MapsId("categoryMetaDataFieldId")
     private CategoryMetaDataField categoryMetaDataField;
 
     private String value;
@@ -52,5 +52,15 @@ public class CategoryMetaDataFieldValue implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryMetaDataFieldValue{" +
+                "id=" + id +
+                ", category=" + category +
+                ", categoryMetaDataField=" + categoryMetaDataField +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

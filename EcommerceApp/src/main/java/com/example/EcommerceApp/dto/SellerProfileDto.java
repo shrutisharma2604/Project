@@ -28,6 +28,8 @@ public class SellerProfileDto {
     @Pattern(regexp="\\d{10}", message="Mobile number is invalid")
     private String companyContact;
 
+    private SellerAddressDto address;
+
     public Long getId() {
         return id;
     }
@@ -76,4 +78,11 @@ public class SellerProfileDto {
         this.companyContact = companyContact;
     }
 
+    public SellerAddressDto getAddress() {
+        return address;
+    }
+
+    public void setAddress(SellerAddressDto address) {
+        this.address = address;
+    }
 }

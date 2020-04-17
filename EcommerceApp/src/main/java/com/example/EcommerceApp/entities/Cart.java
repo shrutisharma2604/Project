@@ -15,8 +15,9 @@ public class Cart {
     @JoinColumn(name = "customer_user_id")
     private Customer customer;
 
-  /* @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private Set<Product_Variation> product_variations;*/
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_variation_id")
+    private Product_Variation productVariation;
 
     public Long getId() {
         return id;

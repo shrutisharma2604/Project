@@ -1,12 +1,28 @@
 package com.example.EcommerceApp.dto;
 
+import com.example.EcommerceApp.entities.CategoryMetaDataField;
+
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.List;
 
-public class CategoryMetaDataFieldValueDto implements Serializable {
+public class CategoryMetaDataFieldValueDto  {
     private Long categoryId;
-    private Long fieldId;
+    private List<CategoryMetaDataField> fieldValue;
 
-    @NotEmpty
-    private String values;
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public List<CategoryMetaDataField> getFieldValue() {
+        return fieldValue;
+    }
+
+    public void setFieldValue(List<CategoryMetaDataField> fieldValue) {
+        this.fieldValue = fieldValue;
+    }
 }

@@ -17,12 +17,10 @@ public class Category {
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     private Set<Product> products;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parentCategory;
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id",referencedColumnName = "id",nullable = true)
+    private Category parentId;
 
-    @OneToMany(mappedBy = "parentCategory",cascade = CascadeType.ALL)
-    private Set<Category> subCategories;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValues;
@@ -51,20 +49,12 @@ public class Category {
         this.products = products;
     }
 
-    public Category getParentCategory() {
-        return parentCategory;
+    public Category getParentId() {
+        return parentId;
     }
 
-    public void setParentCategory(Category parentCategory) {
-        this.parentCategory = parentCategory;
-    }
-
-    public Set<Category> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(Set<Category> subCategories) {
-        this.subCategories = subCategories;
+    public void setParentId(Category parentId) {
+        this.parentId = parentId;
     }
 
     public Set<CategoryMetaDataFieldValue> getCategoryMetaDataFieldValues() {
@@ -74,24 +64,4 @@ public class Category {
     public void setCategoryMetaDataFieldValues(Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValues) {
         this.categoryMetaDataFieldValues = categoryMetaDataFieldValues;
     }
-    /*  public void addSubCategories(Category category){
-        if(category!=null){
-            if(subCategories==null){
-                subCategories=new HashSet<>();
-            }
-            subCategories.add(category);
-            category.setParentCategory(this);
-        }
-    }
-    public void addProducts(Product product){
-        if(product!=null){
-            if(products==null){
-                products=new HashSet<>();
-            }
-            products.add(product);
-            product.setCategory(this);
-        }
-    }*/
-
-
 }

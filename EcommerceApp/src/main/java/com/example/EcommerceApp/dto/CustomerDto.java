@@ -26,7 +26,6 @@ public class CustomerDto {
     private String firstName;
     @NotEmpty(message = "Please provide your last name")
     private String lastName;
-    private Set<Address> addresses;
 
     public String getEmail() {
         return email;
@@ -76,11 +75,4 @@ public class CustomerDto {
         this.lastName = lastName;
     }
 
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
-    }
 }

@@ -75,11 +75,7 @@ public class RegisterService {
         customer.setRoles(roleSet);
         customer.setLocked(false);
         customer.setExpired(false);
-        Set<Address> addresses=customer.getAddresses();
-        addresses.forEach(address -> {
-            Address addressSave = address;
-            addressSave.setUser(customer);
-        });
+
         userRepository.save(customer);
 
         String token = UUID.randomUUID().toString();
@@ -161,13 +157,18 @@ public class RegisterService {
         seller.setLocked(false);
         seller.setExpired(false);
 
-        CustomerActivate customerActivate = new CustomerActivate();
+       /* CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());
 
         customerActivateRepo.save(customerActivate);
         String email = seller.getEmail();
 
-        emailNotificationService.sendNotification("ACCOUNT ACTIVATE ", "Your account has been created", email);
+        emailNotificationService.sendNotification("ACCOUNT ACTIVATE ", "Your account has been created", email);*/
+        Set<Address> addresses=seller.getAddresses();
+        addresses.forEach(address -> {
+            Address addressSave = address;
+            addressSave.setUser(seller);
+        });
         userRepository.save(seller);
         return "Success";
     }
