@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-public class CustomerProfileDto{
+public class CustomerProfileDTO {
     private Long id;
     @NotEmpty(message = "Please provide your first name")
     private String firstName;
@@ -85,5 +85,19 @@ public class CustomerProfileDto{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerProfileDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                ", image='" + image + '\'' +
+                ", contact='" + contact + '\'' +
+                '}';
     }
 }

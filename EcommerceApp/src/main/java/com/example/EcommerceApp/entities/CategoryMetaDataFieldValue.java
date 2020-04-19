@@ -1,10 +1,7 @@
 package com.example.EcommerceApp.entities;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.io.Serializable;
+
 @Entity
 public class CategoryMetaDataFieldValue  {
 
@@ -13,11 +10,11 @@ public class CategoryMetaDataFieldValue  {
     private Long id;
 
     @ManyToOne
-    @MapsId("categoryId")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
-    @MapsId("categoryMetaDataFieldId")
+    @JoinColumn(name = "category_metadata_field_id")
     private CategoryMetaDataField categoryMetaDataField;
 
     private String value;

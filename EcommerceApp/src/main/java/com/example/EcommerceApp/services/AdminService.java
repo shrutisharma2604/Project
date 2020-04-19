@@ -1,11 +1,9 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.entities.Admin;
 import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.events.EmailNotificationService;
-import com.example.EcommerceApp.repositories.AdminRepository;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.CustomerRepository;
 import com.example.EcommerceApp.repositories.SellerRepository;
 import com.example.EcommerceApp.repositories.UserRepository;
@@ -17,11 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 import java.util.Optional;
 

@@ -1,24 +1,12 @@
 package com.example.EcommerceApp.security;
 
-import com.example.EcommerceApp.dto.CustomerDto;
-import com.example.EcommerceApp.dto.SellerDto;
-import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.events.EmailNotificationService;
-import com.example.EcommerceApp.repositories.*;
 import com.example.EcommerceApp.validation.EmailValidation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 
 @Service

@@ -2,7 +2,6 @@ package com.example.EcommerceApp.entities;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -20,6 +19,8 @@ public class Customer extends User {
 
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Product> products;
+
+    private String image;
 
     public String getContact() {
         return contact;
@@ -61,5 +62,13 @@ public class Customer extends User {
                 ", orders=" + orders +
                 ", products=" + products +
                 '}';
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

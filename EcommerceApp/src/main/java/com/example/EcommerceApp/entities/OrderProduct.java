@@ -67,4 +67,16 @@ public class OrderProduct {
     public void setStatus(Set<OrderStatus> status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", order=" + order +
+                ", product_variation=" + product_variation +
+                ", status=" + status +
+                '}';
+    }
 }

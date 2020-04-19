@@ -1,9 +1,9 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.dto.CustomerDto;
-import com.example.EcommerceApp.dto.SellerDto;
+import com.example.EcommerceApp.dto.CustomerDTO;
+import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.events.EmailNotificationService;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.*;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
@@ -46,7 +46,7 @@ public class RegisterService {
     private AddressRepository addressRepository;
 
     @Transactional
-    public String registerCustomer(CustomerDto customerDto) {
+    public String registerCustomer(CustomerDTO customerDto) {
 
         User user = userRepository.findByEmail(customerDto.getEmail());
         try {
@@ -91,11 +91,11 @@ public class RegisterService {
         emailNotificationService.sendNotification("ACCOUNT ACTIVATE TOKEN", "To confirm your account, please click here : "
                 + "http://localhost:8080/register/confirm-account?token=" + token, email);
 
-        return "Success";
+        return "Registered Successfully";
     }
 
     @Transactional
-    public String registerSeller(SellerDto sellerDto) {
+    public String registerSeller(SellerDTO sellerDto) {
         boolean isValidGst = gstValidation.validateGst(sellerDto.getGST());
         if (!isValidGst) {
             return "gst is not valid";
@@ -142,7 +142,7 @@ public class RegisterService {
         if (sellerDto.getCompanyContact().length() != 10) {
             return "invalid contact";
         }
-        if(sellerDto.getCompanyAddress().size() != 1) {
+        if(sellerDto.getAddresses().size() != 1) {
             return "Seller does not have multiple addresses";
         }
 
@@ -157,20 +157,20 @@ public class RegisterService {
         seller.setLocked(false);
         seller.setExpired(false);
 
-       /* CustomerActivate customerActivate = new CustomerActivate();
+        Address address=new Address();
+        address.setUser(seller);
+        addressRepository.save(address);
+
+        CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());
 
         customerActivateRepo.save(customerActivate);
         String email = seller.getEmail();
 
-        emailNotificationService.sendNotification("ACCOUNT ACTIVATE ", "Your account has been created", email);*/
-        Set<Address> addresses=seller.getAddresses();
-        addresses.forEach(address -> {
-            Address addressSave = address;
-            addressSave.setUser(seller);
-        });
+        emailNotificationService.sendNotification("ACCOUNT CREATED ", "Your account has been created", email);
+
         userRepository.save(seller);
-        return "Success";
+        return "Registered Successfully";
     }
 
 }

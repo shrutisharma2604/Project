@@ -1,14 +1,17 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.dto.CategoryMetaDataFieldDto;
+import com.example.EcommerceApp.dto.AllProductDTO;
+import com.example.EcommerceApp.dto.CategoryDTO;
+import com.example.EcommerceApp.dto.ProductVariationGetDTO;
+import com.example.EcommerceApp.entities.CategoryMetaDataField;
 import com.example.EcommerceApp.services.AdminService;
 import com.example.EcommerceApp.services.CategoryService;
+import com.example.EcommerceApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,7 +22,7 @@ public class AdminController {
     private AdminService adminService;
 
     @Autowired
-    private CategoryService categoryService;
+    private ProductService productService;
 
     @GetMapping(path = "/customers")
     public MappingJacksonValue getCustomers(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, @RequestParam(defaultValue = "id") String SortBy) {
@@ -67,47 +70,24 @@ public class AdminController {
         }
         return message;
     }
-
-    @PostMapping(path = "/metaDataField")
-    public String addMetaDataField(@Valid @RequestBody CategoryMetaDataFieldDto categoryMetaDataFieldDto) {
-        return categoryService.addMetadataField(categoryMetaDataFieldDto);
+    @GetMapping(path = "/product/{productId}")
+    public List<ProductVariationGetDTO> getProduct(@PathVariable(value = "productId") Long productId) {
+        return productService.getProductForAdmin(productId);
     }
 
-    @GetMapping(path = "/metaData")
-    public MappingJacksonValue getMetaDataField() {
-        return categoryService.viewAllMetaDataFields();
+    @GetMapping(path = "/{categoryId}/product")
+    public AllProductDTO getProducts(@PathVariable(value = "categoryId") Long categoryId) {
+        return productService.getAllProductsByCategoryId(categoryId);
     }
 
-    @PostMapping("/add")
-    public String addCategory(@RequestParam String name, @RequestParam(required = false) Optional<Long> parentId, HttpServletResponse response) {
-        String getMessage = categoryService.addCategory(name, parentId);
-        if (getMessage.contains("Success")) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return getMessage;
+    @PutMapping(path = "/product/{productId}/activate")
+    public String activateProduct(@PathVariable(value = "productId") Long productId) {
+        return productService.activateProduct(productId);
     }
 
-    @DeleteMapping("/delete")
-    public String deleteCategory(@RequestParam Long id, HttpServletResponse response) {
-        String getMessage = categoryService.deleteCategory(id);
-        if ("Success".contentEquals(getMessage)) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return getMessage;
+    @PutMapping(path = "/product/{productId}/deActivate")
+    public String deActivateProduct(@PathVariable(value = "productId") Long productId) {
+        return productService.deActivateProduct(productId);
     }
 
-    @PutMapping("/update")
-    public String updateCategory(@RequestParam Long id, @RequestParam String name, HttpServletResponse response) {
-        String getMessage = categoryService.updateCategory(name, id);
-        if ("Success".contentEquals(getMessage)) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return getMessage;
-    }
 }

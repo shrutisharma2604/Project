@@ -1,18 +1,12 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.dto.CustomerDto;
-import com.example.EcommerceApp.dto.SellerDto;
-import com.example.EcommerceApp.entities.Admin;
-import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.events.EmailNotificationService;
-import com.example.EcommerceApp.security.AppUserDetailsService;
+import com.example.EcommerceApp.dto.CustomerDTO;
+import com.example.EcommerceApp.dto.SellerDTO;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.services.CustomerActivateService;
-import com.example.EcommerceApp.services.CustomerService;
 import com.example.EcommerceApp.services.RegisterService;
-import com.example.EcommerceApp.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -28,11 +22,11 @@ public class RegistrationController {
     private CustomerActivateService customerActivateService;
 
     @PostMapping(path = "/customer")
-    public String registerCustomer(@Valid @RequestBody CustomerDto customerDto, HttpServletResponse httpServletResponse){
+    public String registerCustomer(@Valid @RequestBody CustomerDTO customerDto, HttpServletResponse httpServletResponse){
       String message=registerService.registerCustomer(customerDto);
         System.out.println(message + "Customer");
         // content equals
-        if ("Success".equals(message)) {
+        if ("Registered Successfully".equals(message)) {
             httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -41,10 +35,10 @@ public class RegistrationController {
     }
 
     @PostMapping(path = "/seller")
-    public String registerSeller(@Valid @RequestBody SellerDto sellerDto,HttpServletResponse httpServletResponse){
+    public String registerSeller(@Valid @RequestBody SellerDTO sellerDto, HttpServletResponse httpServletResponse){
       String message=registerService.registerSeller(sellerDto);
         System.out.println(message + "Seller");
-        if("Success".equals(message)){
+        if("Registered Successfully".equals(message)){
             httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
         }
         else{

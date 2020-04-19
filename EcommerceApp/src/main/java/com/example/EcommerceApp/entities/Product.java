@@ -12,10 +12,11 @@ public class Product {
     private String name;
     private String description;
 
-    private boolean brand;
+    private String brand;
     private boolean isReturnable;
     private boolean isCancellable;
     private boolean isActive;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "seller_user_id")
@@ -61,11 +62,11 @@ public class Product {
         this.description = description;
     }
 
-    public boolean isBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(boolean brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
@@ -125,6 +126,14 @@ public class Product {
         this.reviews = reviews;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -141,4 +150,5 @@ public class Product {
                 ", reviews=" + reviews +
                 '}';
     }
+
 }

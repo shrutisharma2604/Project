@@ -1,6 +1,7 @@
 package com.example.EcommerceApp.dto;
 
-public class AddressDto {
+public class AddressDTO {
+    private Long userId;
     private Long id;
     private String city;
     private String state;
@@ -63,5 +64,27 @@ public class AddressDto {
 
     public void setZipCode(Integer zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressDTO{" +
+                "userId=" + userId +
+                ", id=" + id +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", address='" + address + '\'' +
+                ", label='" + label + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
     }
 }

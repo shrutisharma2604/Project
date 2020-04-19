@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +38,7 @@ public class ForgotPassword {
     @PatchMapping("/resetPassword")
     public String resetPassword(@RequestParam String email, @RequestParam String token, @RequestParam String pass, @RequestParam String cpass, HttpServletResponse httpServletResponse) {
         String getMessage = forgotPasswordService.resetPassword(email, token, pass, cpass);
-        if (getMessage.equals("Success")) {
+        if (getMessage.equals("Password Changed Successfully")) {
             httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);

@@ -49,4 +49,15 @@ public class OrderAddress {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        return "OrderAddress{" +
+                "addressLine='" + addressLine + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", label='" + label + '\'' +
+                '}';
+    }
 }

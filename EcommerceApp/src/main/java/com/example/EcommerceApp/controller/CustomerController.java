@@ -1,6 +1,7 @@
 package com.example.EcommerceApp.controller;
-import com.example.EcommerceApp.dto.AddressDto;
-import com.example.EcommerceApp.dto.CustomerProfileDto;
+
+import com.example.EcommerceApp.dto.AddressDTO;
+import com.example.EcommerceApp.dto.CustomerProfileDTO;
 import com.example.EcommerceApp.services.CustomerService;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CustomerController {
     private PasswordValidation passwordValidation;
 
     @GetMapping(path = "/getCustomerDetails/{id}")
-    public CustomerProfileDto getCustomerProfile(@PathVariable("id") Long id){
+    public CustomerProfileDTO getCustomerProfile(@PathVariable("id") Long id){
         return customerService.getCustomerDetails(id);
     }
     @GetMapping(path = "/getCustomerAddresses/{id}")
@@ -30,7 +31,7 @@ public class CustomerController {
     }
 
     @PutMapping(path = "profile-update/{id}")
-    public String updateProfile(@Valid @RequestBody CustomerProfileDto profileDto, @PathVariable("id") Long id){
+    public String updateProfile(@Valid @RequestBody CustomerProfileDTO profileDto, @PathVariable("id") Long id){
       return customerService.updateCustomer(profileDto,id);
     }
     @PatchMapping("/updatePassword/{id}")
@@ -44,14 +45,14 @@ public class CustomerController {
         }
     }
     @PostMapping(path = "/{id}/address")
-    public String addAddress(@Valid @RequestBody AddressDto addressDto, @PathVariable(value = "id") Long id){
+    public String addAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "id") Long id){
         return customerService.addAddress(addressDto,id);
     }
 
     @DeleteMapping("/address/{id}")
     public String deleteAddress(@PathVariable Long id,HttpServletResponse response,HttpServletRequest request) {
         String getMessage = customerService.deleteAddress(id,request);
-        if ("Success".contentEquals(getMessage)) {
+        if ("Address Deleted".contentEquals(getMessage)) {
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -59,15 +60,9 @@ public class CustomerController {
         return getMessage;
     }
 
-    @PutMapping("/updateAddress/{id}")
-    public String updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto, HttpServletResponse response, HttpServletRequest request) {
-        String getMessage = customerService.updateAddress(id,addressDto,request);
-        if ("Success".contentEquals(getMessage)) {
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-        return getMessage;
+    @PutMapping(path = "/{userId}/address/{id}")
+    public String updateAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId){
+        return customerService.updateAddress(addressDto,id,userId);
     }
 
 }

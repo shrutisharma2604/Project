@@ -1,13 +1,12 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.dto.AddressDto;
-import com.example.EcommerceApp.dto.CustomerDto;
-import com.example.EcommerceApp.dto.CustomerProfileDto;
+import com.example.EcommerceApp.config.EmailNotificationService;
+import com.example.EcommerceApp.dto.AddressDTO;
+import com.example.EcommerceApp.dto.CustomerDTO;
+import com.example.EcommerceApp.dto.CustomerProfileDTO;
 import com.example.EcommerceApp.entities.Address;
 import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.events.EmailNotificationService;
-import com.example.EcommerceApp.events.UserEmailFromToken;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.CustomerRepository;
@@ -28,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CustomerService {
@@ -53,13 +51,10 @@ public class CustomerService {
   @Autowired
   private UserRepository userRepository;
 
-  @Autowired
-  UserEmailFromToken userEmailFromToken;
-
-    public CustomerProfileDto getCustomerDetails(Long id){
+    public CustomerProfileDTO getCustomerDetails(Long id){
         Optional<Customer> customer = customerRepository.findById(id);
        if(customer.isPresent()){
-           CustomerProfileDto customerProfileDto=new CustomerProfileDto();
+           CustomerProfileDTO customerProfileDto=new CustomerProfileDTO();
            BeanUtils.copyProperties(customer.get(),customerProfileDto);
            return customerProfileDto;
        }
@@ -70,7 +65,7 @@ public class CustomerService {
     public MappingJacksonValue getCustomerAddresses(Long id){
         Optional<Customer> customer=customerRepository.findById(id);
         if(customer.isPresent()) {
-            CustomerDto customerDto = new CustomerDto();
+            CustomerDTO customerDto = new CustomerDTO();
             BeanUtils.copyProperties(customer.get(), customerDto);
 
             SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
@@ -88,7 +83,7 @@ public class CustomerService {
 
     @Transactional
     @Modifying
-    public String updateCustomer(CustomerProfileDto profileDto, Long id){
+    public String updateCustomer(CustomerProfileDTO profileDto, Long id){
         Optional<Customer> customer=customerRepository.findById(id);
         BeanUtils.copyProperties(profileDto,customer);
         if(customer.isPresent()) {
@@ -96,6 +91,7 @@ public class CustomerService {
             customer.get().setLastName(profileDto.getLastName());
             customer.get().setContact(profileDto.getContact());
             customer.get().setEmail(profileDto.getEmail());
+            customer.get().setImage(profileDto.getImage());
             customerRepository.save(customer.get());
             return "Profile updated successfully";
         }
@@ -131,10 +127,11 @@ public class CustomerService {
         }
         return "Success";
     }
-    public String addAddress(AddressDto addressDto,Long id){
+    public String addAddress(AddressDTO addressDto, Long id){
         Optional<Customer> customer=customerRepository.findById(id);
         if(customer.isPresent()){
             Address address=new Address();
+            address.setUser(customer.get());
             BeanUtils.copyProperties(addressDto,address);
             addressRepository.save(address);
             return "Address added";
@@ -150,29 +147,32 @@ public class CustomerService {
             throw  new UserNotFoundException("no address fount with id " + id);
         }
         addressRepository.deleteById(id);
-        return "Success";
+        return "Address Deleted";
     }
 
-    public String updateAddress(Long id,AddressDto addressDto,HttpServletRequest request) {
-        Optional<Address> address = addressRepository.findById(id);
-        if (!address.isPresent()) {
-            throw new UserNotFoundException("no address fount with id " + id);
-        }
-        CustomerDto customerDto=new CustomerDto();
-        Customer customer = customerRepository.findByEmail(customerDto.getEmail());
-        Set<Address> addresses = customer.getAddresses();
-        addresses.forEach(a -> {
-            if (a.getId() == address.get().getId()) {
-                a.setAddress(addressDto.getAddress());
-                a.setCity(addressDto.getCity());
-                a.setCountry(addressDto.getCountry());
-                a.setLabel(addressDto.getLabel());
-                a.setState(addressDto.getState());
-                a.setZipCode(addressDto.getZipCode());
-                a.setAddress(addressDto.getAddress());
+    @Transactional
+    @Modifying
+    public String updateAddress(AddressDTO addressDto, Long id, Long userId){
+
+        Optional<Customer> customer = customerRepository.findById(userId);
+
+        if(customer.isPresent()) {
+            Optional<Address> address = addressRepository.findById(id);
+
+            if (address.isPresent()) {
+                Address address1 = new Address();
+                BeanUtils.copyProperties(addressDto, address1);
+                address1.setDeleted(true);
+
+                addressRepository.save(address1);
+
+                return "Address updated";
+            } else {
+                return "Address not found";
             }
-        });
-        customerRepository.save(customer);
-        return "Success";
+        }else {
+            throw new UserNotFoundException("User not found");
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.EcommerceApp.events;
+package com.example.EcommerceApp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,11 +10,6 @@ import org.springframework.stereotype.Service;
 public class EmailNotificationService {
     @Autowired
     private JavaMailSender javaMailSender;
-
-   /* @Autowired
-    public EmailNotificationService(JavaMailSender javaMailSender){
-        this.javaMailSender=javaMailSender;
-    }*/
 
     @Async
     public void sendNotification(String subject,String text,String sendTo){

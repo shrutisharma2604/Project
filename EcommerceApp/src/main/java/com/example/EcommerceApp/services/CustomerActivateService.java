@@ -2,7 +2,7 @@ package com.example.EcommerceApp.services;
 
 import com.example.EcommerceApp.entities.CustomerActivate;
 import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.events.EmailNotificationService;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.CustomerActivateRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;

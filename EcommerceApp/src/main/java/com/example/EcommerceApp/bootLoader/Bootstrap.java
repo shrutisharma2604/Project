@@ -1,6 +1,7 @@
 package com.example.EcommerceApp.bootLoader;
-import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.repositories.RoleRepository;
+
+import com.example.EcommerceApp.entities.Admin;
+import com.example.EcommerceApp.entities.Role;
 import com.example.EcommerceApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -8,7 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,9 +17,6 @@ public class Bootstrap implements ApplicationRunner {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

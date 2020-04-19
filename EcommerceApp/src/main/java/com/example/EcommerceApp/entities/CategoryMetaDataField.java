@@ -1,21 +1,18 @@
 package com.example.EcommerceApp.entities;
 
-import org.codehaus.jackson.map.annotate.JsonFilter;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@JsonFilter("MetaData-Filter")
 public class CategoryMetaDataField {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
-    @OneToMany(mappedBy = "categoryMetaDataField")
-    private Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValueSet;
-
     private String name;
+
+    @OneToMany(mappedBy = "categoryMetaDataField",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValueSet;
 
     public Long getId() {
         return id;
@@ -25,19 +22,20 @@ public class CategoryMetaDataField {
         this.id = id;
     }
 
-    public Set<CategoryMetaDataFieldValue> getCategoryMetaDataFieldValueSet() {
-        return categoryMetaDataFieldValueSet;
-    }
-
-    public void setCategoryMetaDataFieldValueSet(Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValueSet) {
-        this.categoryMetaDataFieldValueSet = categoryMetaDataFieldValueSet;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonIgnore
+    public Set<CategoryMetaDataFieldValue> getCategoryMetaDataFieldValueSet() {
+        return categoryMetaDataFieldValueSet;
+    }
+
+    public void setCategoryMetaDataFieldValueSet(Set<CategoryMetaDataFieldValue> categoryMetaDataFieldValueSet) {
+        this.categoryMetaDataFieldValueSet = categoryMetaDataFieldValueSet;
     }
 }

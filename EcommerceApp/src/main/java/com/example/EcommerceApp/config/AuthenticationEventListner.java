@@ -2,7 +2,6 @@ package com.example.EcommerceApp.config;
 
 import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.entities.UserLoginAttempts;
-import com.example.EcommerceApp.events.EmailNotificationService;
 import com.example.EcommerceApp.repositories.UserAttemptsRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

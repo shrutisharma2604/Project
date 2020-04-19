@@ -2,7 +2,6 @@ package com.example.EcommerceApp.entities;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,8 +13,9 @@ public class Seller extends User{
     private String GST;
     private String companyContact;
     private String companyName;
-    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Product> products;
+    private String image;
 
     public String getGST() {
         return GST;
@@ -49,4 +49,21 @@ public class Seller extends User{
         this.products = products;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "GST='" + GST + '\'' +
+                ", companyContact='" + companyContact + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", products=" + products +
+                '}';
+    }
 }

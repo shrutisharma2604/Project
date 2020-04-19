@@ -2,7 +2,7 @@ package com.example.EcommerceApp.services;
 
 import com.example.EcommerceApp.entities.ForgotPasswordToken;
 import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.events.EmailNotificationService;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.PasswordRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.UUID;
@@ -67,7 +66,7 @@ public class ForgotPasswordService {
             return "password and confirm password not match";
         }
         if (!passwordValidation.validatePassword(pass,cpass)) {
-            return "in valid password syntax";
+            return "invalid password syntax";
         }
         ForgotPasswordToken forgotPasswordToken = passwordRepo.findByUserEmail(email);
         try {
@@ -94,6 +93,6 @@ public class ForgotPasswordService {
             emailNotificationService.sendNotification("PASSWORD CHANGED", "YOUR PASSWORD HAS BEEN CHANGED", email);
             return "Success";
         }
-        return "Success";
+        return "Password Changed Successfully";
     }
 }

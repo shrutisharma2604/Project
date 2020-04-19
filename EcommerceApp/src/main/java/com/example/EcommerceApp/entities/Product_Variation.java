@@ -1,14 +1,13 @@
 package com.example.EcommerceApp.entities;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Product_Variation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Long quantityAvailable;
+    private Long quantity;
     private Long price;
     private String image;
     private boolean isActive;
@@ -24,12 +23,12 @@ public class Product_Variation {
         this.id = id;
     }
 
-    public Long getQuantityAvailable() {
-        return quantityAvailable;
+    public Long getQuantity() {
+        return quantity;
     }
 
-    public void setQuantityAvailable(Long quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public Long getPrice() {
@@ -68,11 +67,12 @@ public class Product_Variation {
     public String toString() {
         return "Product_Variation{" +
                 "id=" + id +
-                ", quantityAvailable=" + quantityAvailable +
+                ", quantity=" + quantity +
                 ", price=" + price +
                 ", image='" + image + '\'' +
                 ", isActive=" + isActive +
                 ", product=" + product +
                 '}';
     }
+
 }

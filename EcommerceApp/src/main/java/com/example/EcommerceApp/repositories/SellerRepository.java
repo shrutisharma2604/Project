@@ -1,6 +1,5 @@
 package com.example.EcommerceApp.repositories;
 
-import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

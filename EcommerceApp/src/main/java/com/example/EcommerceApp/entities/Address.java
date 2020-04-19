@@ -1,7 +1,8 @@
 package com.example.EcommerceApp.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+
 @Entity
 public class Address {
     @Id
@@ -17,6 +18,11 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "user_id",insertable = false,updatable = false)
+    private Long userId;
+
+    private boolean isDeleted;
 
   /*  @ManyToMany
     private Set<Orders> orders;*/
@@ -96,5 +102,37 @@ public class Address {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", zipCode=" + zipCode +
+                ", address='" + address + '\'' +
+                ", label='" + label + '\'' +
+                ", user=" + user +
+                ", userId=" + userId +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

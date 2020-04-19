@@ -1,7 +1,6 @@
 package com.example.EcommerceApp.entities;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Cart {
@@ -50,8 +49,6 @@ public class Cart {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-
-
 
     @Override
     public String toString() {

@@ -1,12 +1,9 @@
 package com.example.EcommerceApp.dto;
 
-import com.example.EcommerceApp.entities.Address;
-
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-public class SellerProfileDto {
+public class SellerProfileDTO {
     private Long id;
     @NotEmpty(message = "Please provide first name")
     private String firstName;
@@ -28,7 +25,7 @@ public class SellerProfileDto {
     @Pattern(regexp="\\d{10}", message="Mobile number is invalid")
     private String companyContact;
 
-    private SellerAddressDto address;
+    private String image;
 
     public Long getId() {
         return id;
@@ -78,11 +75,24 @@ public class SellerProfileDto {
         this.companyContact = companyContact;
     }
 
-    public SellerAddressDto getAddress() {
-        return address;
+    public String getImage() {
+        return image;
     }
 
-    public void setAddress(SellerAddressDto address) {
-        this.address = address;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "SellerProfileDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", GST='" + GST + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", companyContact='" + companyContact + '\'' +
+                ", image='" + image + '\'' +
+                '}';
     }
 }

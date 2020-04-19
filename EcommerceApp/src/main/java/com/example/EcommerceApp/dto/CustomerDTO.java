@@ -1,13 +1,13 @@
 package com.example.EcommerceApp.dto;
-import com.example.EcommerceApp.entities.Address;
-import com.example.EcommerceApp.entities.Role;
-import com.fasterxml.jackson.annotation.JsonFilter;
+
+import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import java.util.Set;
-public class CustomerDto {
+
+@JsonFilter("CustomerFilter")
+public class CustomerDTO {
     @Email
     @NotEmpty(message = "Please provide valid email")
     private String email;
@@ -75,4 +75,15 @@ public class CustomerDto {
         this.lastName = lastName;
     }
 
+    @Override
+    public String toString() {
+        return "CustomerDTO{" +
+                "email='" + email + '\'' +
+                ", contact='" + contact + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }

@@ -55,4 +55,14 @@ public class ForgotPasswordToken {
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
+
+    @Override
+    public String toString() {
+        return "ForgotPasswordToken{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", expiryDate=" + expiryDate +
+                '}';
+    }
 }

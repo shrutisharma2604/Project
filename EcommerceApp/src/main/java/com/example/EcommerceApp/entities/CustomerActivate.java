@@ -54,5 +54,15 @@ public class CustomerActivate {
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerActivate{" +
+                "id=" + id +
+                ", userEmail='" + userEmail + '\'' +
+                ", token='" + token + '\'' +
+                ", expiryDate=" + expiryDate +
+                '}';
+    }
 }
 

@@ -1,13 +1,12 @@
 package com.example.EcommerceApp.dto;
 
 import com.example.EcommerceApp.entities.Address;
-import com.fasterxml.jackson.annotation.JsonFilter;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Set;
-public class SellerDto {
+
+public class SellerDTO {
     @Email(message = "Please provide a valid e-mail")
     @NotEmpty(message = "Please provide an e-mail")
     private String email;
@@ -33,7 +32,7 @@ public class SellerDto {
     private String GST;
     @NotEmpty(message = "Please provide your company name")
     private String companyName;
-    private Set<Address> companyAddress;
+    private Set<Address> addresses;
     @NotEmpty(message = "Must provide company contact number")
     @Pattern(regexp="\\d{10}", message="Mobile number is invalid")
     private String companyContact;
@@ -86,11 +85,24 @@ public class SellerDto {
         this.GST = GST;
     }
 
-    public Set<Address> getCompanyAddress() {
-        return companyAddress;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setCompanyAddress(Set<Address> companyAddress) {
-        this.companyAddress = companyAddress;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
+    }
+
+    @Override
+    public String toString() {
+        return "SellerDTO{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", GST='" + GST + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", addresses=" + addresses +
+                ", companyContact='" + companyContact + '\'' +
+                '}';
     }
 }
