@@ -1,8 +1,13 @@
 package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.AddressDTO;
+import com.example.EcommerceApp.dto.AllProductDTO;
 import com.example.EcommerceApp.dto.CustomerProfileDTO;
+import com.example.EcommerceApp.dto.ProductVariationGetDTO;
+import com.example.EcommerceApp.entities.Product;
+import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.CustomerService;
+import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/customer/home")
@@ -20,6 +26,12 @@ public class CustomerController {
 
     @Autowired
     private PasswordValidation passwordValidation;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping(path = "/getCustomerDetails/{id}")
     public CustomerProfileDTO getCustomerProfile(@PathVariable("id") Long id){
@@ -63,6 +75,28 @@ public class CustomerController {
     @PutMapping(path = "/{userId}/address/{id}")
     public String updateAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "id") Long id, @PathVariable(value = "userId") Long userId){
         return customerService.updateAddress(addressDto,id,userId);
+    }
+
+    // product api
+    @GetMapping(path = "/product/{productId}")
+    public List<ProductVariationGetDTO> getProduct(@PathVariable(value = "productId") Long productId) {
+        return productService.getProductForUser(productId);
+    }
+
+    @GetMapping(path = "/category/{categoryId}/product")
+    public AllProductDTO getProducts(@PathVariable(value = "categoryId") Long categoryId) {
+        return productService.getAllProductsByCategoryId(categoryId);
+    }
+
+    @GetMapping(path = "/product/{productId}/")
+    public List<Product> getSimilarProducts(@PathVariable(value = "productId") Long productId) {
+        return productService.getSimilarProducts(productId);
+    }
+
+    //category api
+    @GetMapping("/filterCategories/{categoryId}")
+    public List<?> filterCategory(@PathVariable Long categoryId) {
+        return categoryService.filterCategory(categoryId);
     }
 
 }

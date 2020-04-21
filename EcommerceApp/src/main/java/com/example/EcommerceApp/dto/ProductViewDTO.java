@@ -10,7 +10,7 @@ public class ProductViewDTO {
 
     private String companyName;
 
-    private String productName;
+    private String name;
 
     private String description;
 
@@ -38,12 +38,12 @@ public class ProductViewDTO {
         this.category = category;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getName() {
+        return name;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -100,7 +100,7 @@ public class ProductViewDTO {
                 "id=" + id +
                 ", category=" + category +
                 ", companyName='" + companyName + '\'' +
-                ", productName='" + productName + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", brand='" + brand + '\'' +
                 ", isCancellable=" + isCancellable +

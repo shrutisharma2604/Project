@@ -1,10 +1,12 @@
 package com.example.EcommerceApp.repositories;
 
-import com.example.EcommerceApp.dto.ProductMinMaxPriceDTO;
 import com.example.EcommerceApp.entities.Product;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product,Long> {
@@ -17,9 +19,6 @@ public interface ProductRepository extends CrudRepository<Product,Long> {
     @Query(value = "select * from Product where category_id=:categoryId",nativeQuery = true)
     List<Product> findAllProduct(@Param("categoryId") Long categoryId);
 
-    @Query(value = "select min(pv.price) as minPrice,max(pv.price) as maxPrice from product p inner join Product_Variation pv on pv.product_id=p.id where p.category_id=:categoryId group by p.category_id",nativeQuery = true)
-    ProductMinMaxPriceDTO findMinMaxPriceBasedOnCategory(@Param("categoryId") Long categoryId);
-
     @Query(value = "select * from Product p where p.category_id=:categoryId or p.product_name=:productName or p.id in (select pv.product_id from Product_Variation pv)",nativeQuery = true)
     List<Product> findSimilarProducts(@Param(value = "categoryId") Long categoryId, @Param(value = "productName") String productName);
 
@@ -28,4 +27,9 @@ public interface ProductRepository extends CrudRepository<Product,Long> {
 
     @Query(value = "select brand from Product where category_id=:id",nativeQuery = true)
     List<String> getBrandsOfCategory(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from Product where id=:id",nativeQuery = true)
+    void deleteById(@Param("id") Long id);
 }

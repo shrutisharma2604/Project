@@ -1,14 +1,18 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.dto.*;
+import com.example.EcommerceApp.dto.CategoryDTO;
+import com.example.EcommerceApp.dto.CategoryMetaDataFieldDTO;
+import com.example.EcommerceApp.dto.FilterCategoryDTO;
 import com.example.EcommerceApp.entities.Category;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
+import com.example.EcommerceApp.entities.CategoryMetaDataFieldValue;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -151,10 +155,10 @@ public class CategoryService {
                 }
                 filedValuesSet.add(fieldValueMap);
             });
-            List<Optional<Category>> childrenCategory = categoryRepository.findByParentId(id);
+            List<Optional<Category>> subCategory = categoryRepository.findByParentId(id);
             Set<Category> subCategorySet = new HashSet<>();
-            childrenCategory.forEach(c->{
-                subCategorySet.add(c.get());
+            subCategory.forEach(s->{
+                subCategorySet.add(s.get());
             });
             categoryDto.setCategory(category.get());
             categoryDto.setSubCategories(subCategorySet);
@@ -195,12 +199,12 @@ public class CategoryService {
             if (!categoryRepository.findById(categoryId.get()).isPresent()) {
                 throw new NotFoundException(categoryId.get() + " category does not exist");
             }
-            List<Optional<Category>> childrenCategory = categoryRepository.findByParentId(categoryId.get());
-            List<Category> childrenCategoryList = new ArrayList<>();
-            childrenCategory.forEach(c->{
-                childrenCategoryList.add(c.get());
+            List<Optional<Category>> subCategory = categoryRepository.findByParentId(categoryId.get());
+            List<Category> subCategoryList = new ArrayList<>();
+            subCategory.forEach(c->{
+                subCategoryList.add(c.get());
             });
-            return childrenCategoryList;
+            return subCategoryList;
         }
         List<Category> categories = categoryRepository.findRootCategories();
         return categories;
@@ -214,8 +218,8 @@ public class CategoryService {
         System.out.println(leafCategories);
         if (leafCategories.contains(categoryId)) {
             // not a leaf category
-            List<Optional<Category>> immediateChildren = categoryRepository.findByParentId(categoryId);
-            immediateChildren.forEach(c->{
+            List<Optional<Category>> subCategory = categoryRepository.findByParentId(categoryId);
+            subCategory.forEach(s->{
                 FilterCategoryDTO filterCategoryDTO = filterCategoryProvider(categoryId);
                 categoryDTOS.add(filterCategoryDTO);
             });

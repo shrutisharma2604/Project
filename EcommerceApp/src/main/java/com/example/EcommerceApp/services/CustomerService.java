@@ -7,6 +7,7 @@ import com.example.EcommerceApp.dto.CustomerProfileDTO;
 import com.example.EcommerceApp.entities.Address;
 import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.User;
+import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.CustomerRepository;
@@ -59,7 +60,7 @@ public class CustomerService {
            return customerProfileDto;
        }
        else {
-           throw new UserNotFoundException("User Not Found");
+           throw new NotFoundException("User Not Found");
        }
     }
     public MappingJacksonValue getCustomerAddresses(Long id){
@@ -69,14 +70,14 @@ public class CustomerService {
             BeanUtils.copyProperties(customer.get(), customerDto);
 
             SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
-            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("CustomerFilter", filter);
+            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("CustomerDTO-Filter", filter);
 
             MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(customerDto);
 
             return mappingJacksonValue;
         }
         else {
-            throw new UserNotFoundException("User Not Found");
+            throw new NotFoundException("User Not Found");
         }
 
     }
@@ -96,7 +97,7 @@ public class CustomerService {
             return "Profile updated successfully";
         }
         else{
-            throw new UserNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         }
 
     }
@@ -123,7 +124,7 @@ public class CustomerService {
                 httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         } else {
-            throw new UserNotFoundException("User not found");
+            throw new NotFoundException("User not found");
         }
         return "Success";
     }
@@ -144,7 +145,7 @@ public class CustomerService {
     public String deleteAddress(Long id, HttpServletRequest request) {
         Optional<Address> address = addressRepository.findById(id);
         if (!address.isPresent()) {
-            throw  new UserNotFoundException("no address fount with id " + id);
+            throw  new NotFoundException("no address fount with id " + id);
         }
         addressRepository.deleteById(id);
         return "Address Deleted";
@@ -152,27 +153,26 @@ public class CustomerService {
 
     @Transactional
     @Modifying
-    public String updateAddress(AddressDTO addressDto, Long id, Long userId){
-
+    public String updateAddress(AddressDTO addressDto, Long id,Long userId) {
         Optional<Customer> customer = customerRepository.findById(userId);
 
-        if(customer.isPresent()) {
+        if (customer.isPresent()) {
             Optional<Address> address = addressRepository.findById(id);
-
+            BeanUtils.copyProperties(addressDto, address);
             if (address.isPresent()) {
-                Address address1 = new Address();
-                BeanUtils.copyProperties(addressDto, address1);
-                address1.setDeleted(true);
-
-                addressRepository.save(address1);
-
-                return "Address updated";
+                address.get().setAddress(addressDto.getAddress());
+                address.get().setCity(addressDto.getCity());
+                address.get().setCountry(addressDto.getCountry());
+                address.get().setLabel(addressDto.getLabel());
+                address.get().setState(addressDto.getState());
+                address.get().setZipCode(addressDto.getZipCode());
+                addressRepository.save(address.get());
+                return "Address Updated Successfully";
             } else {
-                return "Address not found";
+                throw new NotFoundException("Address not found");
             }
-        }else {
-            throw new UserNotFoundException("User not found");
+        } else {
+            throw new NotFoundException("User not found");
         }
-
     }
 }

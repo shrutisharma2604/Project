@@ -19,11 +19,6 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "user_id",insertable = false,updatable = false)
-    private Long userId;
-
-    private boolean isDeleted;
-
   /*  @ManyToMany
     private Set<Orders> orders;*/
 
@@ -104,21 +99,6 @@ public class Address {
         this.user = user;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     @Override
     public String toString() {
@@ -131,8 +111,6 @@ public class Address {
                 ", address='" + address + '\'' +
                 ", label='" + label + '\'' +
                 ", user=" + user +
-                ", userId=" + userId +
-                ", isDeleted=" + isDeleted +
                 '}';
     }
 }

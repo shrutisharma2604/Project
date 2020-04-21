@@ -8,6 +8,8 @@ import com.example.EcommerceApp.services.AdminService;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,12 @@ public class AdminController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping(path = "/customers")
     public MappingJacksonValue getCustomers(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, @RequestParam(defaultValue = "id") String SortBy) {
@@ -70,6 +78,8 @@ public class AdminController {
         }
         return message;
     }
+
+    //product api
     @GetMapping(path = "/product/{productId}")
     public List<ProductVariationGetDTO> getProduct(@PathVariable(value = "productId") Long productId) {
         return productService.getProductForAdmin(productId);
@@ -90,4 +100,66 @@ public class AdminController {
         return productService.deActivateProduct(productId);
     }
 
+    @GetMapping(path = "/hello-world-internationalization")
+    public String helloWorldInternationalization(){
+        return messageSource.getMessage("good.morning.messages",null, LocaleContextHolder.getLocale());
+    }
+
+    //category api
+    @PostMapping("/add")
+    public String addMetadata(@RequestParam String fieldName, HttpServletResponse response) {
+        String getMessage = categoryService.addMetadata(fieldName);
+        if (getMessage.contains("Success")) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
+    }
+
+    @GetMapping("/viewMetaData")
+    public List<CategoryMetaDataField> viewMetadata(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, @RequestParam(defaultValue = "id") String SortBy, @RequestParam(defaultValue = "ASC") String order, @RequestParam Optional<String> query) {
+        return categoryService.viewMetadata(page,size,SortBy,order,query);
+    }
+    @PostMapping("/addCategory")
+    public String addCategory(@RequestParam String name, @RequestParam(required = false) Optional<Long> parentId, HttpServletResponse response) {
+        String getMessage = categoryService.addCategory(name,parentId);
+        if (getMessage.contains("Success")) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
+    }
+
+    @DeleteMapping("/delete")
+    public String deleteCategory(@RequestParam Long id,HttpServletResponse response) {
+        String getMessage = categoryService.deleteCategory(id);
+        if ("Success".contentEquals(getMessage)) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
+    }
+
+    @PutMapping("/updateCategory")
+    public String updateCategory(@RequestParam Long id,@RequestParam String name,HttpServletResponse response) {
+        String getMessage = categoryService.updateCategory(name,id);
+        if ("Success".contentEquals(getMessage)) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
+    }
+    @GetMapping("{id}")
+    public CategoryDTO viewCategory(@PathVariable Long id) {
+        return categoryService.viewCategory(id);
+    }
+
+    @GetMapping("/all")
+    public List<CategoryDTO> viewCategories(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, @RequestParam(defaultValue = "id") String SortBy, @RequestParam(defaultValue = "ASC") String order, @RequestParam Optional<String> query) {
+        return categoryService.viewCategories(page,size,SortBy,order,query);
+    }
 }

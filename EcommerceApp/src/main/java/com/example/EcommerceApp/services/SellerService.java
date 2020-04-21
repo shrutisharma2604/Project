@@ -4,6 +4,7 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.AddressDTO;
 import com.example.EcommerceApp.dto.SellerProfileDTO;
 import com.example.EcommerceApp.entities.Address;
+import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.exception.NotFoundException;
@@ -98,31 +99,26 @@ public class SellerService {
 
     @Transactional
     @Modifying
-    public String updateAddress(AddressDTO addressDto, Long addressId, Long userId) {
-
+    public String updateAddress(AddressDTO addressDto, Long id,Long userId) {
         Optional<Seller> seller = sellerRepository.findById(userId);
 
         if (seller.isPresent()) {
-            Optional<Address> addressExist = addressRepository.findById(addressId);
-            StringBuilder sb = new StringBuilder();
-
-            if (addressExist.isPresent()) {
-                Address address = new Address();
-
-                System.out.println("Status deleted : ");
-                BeanUtils.copyProperties(addressDto, address);
-
-                address.setDeleted(true);
-
-                addressRepository.save(address);
-
-                sb.append("Address updated");
+            Optional<Address> address = addressRepository.findById(id);
+            BeanUtils.copyProperties(addressDto, address);
+            if (address.isPresent()) {
+                address.get().setAddress(addressDto.getAddress());
+                address.get().setCity(addressDto.getCity());
+                address.get().setCountry(addressDto.getCountry());
+                address.get().setLabel(addressDto.getLabel());
+                address.get().setState(addressDto.getState());
+                address.get().setZipCode(addressDto.getZipCode());
+                addressRepository.save(address.get());
+                return "Address Updated Successfully";
             } else {
                 throw new NotFoundException("Address not found");
             }
         } else {
             throw new NotFoundException("User not found");
         }
-        return "Success";
     }
 }

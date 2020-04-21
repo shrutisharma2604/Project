@@ -1,5 +1,6 @@
 package com.example.EcommerceApp.services;
 
+import com.example.EcommerceApp.dto.AddressDTO;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;

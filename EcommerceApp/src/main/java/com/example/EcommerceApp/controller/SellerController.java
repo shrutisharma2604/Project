@@ -1,15 +1,19 @@
 package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.*;
+import com.example.EcommerceApp.entities.Category;
 import com.example.EcommerceApp.services.CategoryService;
+import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.services.SellerService;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/seller/home")
@@ -19,6 +23,9 @@ public class SellerController {
 
     @Autowired
     private PasswordValidation passwordValidation;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private CategoryService categoryService;
@@ -46,10 +53,61 @@ public class SellerController {
         return sellerService.updateAddress(addressDto, addressId, userId);
     }
 
-
-    //category
-    @GetMapping("/categories")
-    public List<CategoryDTO> viewLeafCategories() {
-        return categoryService.viewLeafCategories();
+    // product api
+    @PostMapping(path = "/{userId}/{categoryId}")
+    public String addProduct(@PathVariable(value = "userId") Long userId, @PathVariable(value = "categoryId") Long categoryId, @Valid @RequestBody ProductDTO productDto){
+        return productService.addProduct(userId,categoryId,productDto);
     }
+
+    @PostMapping(path = "/product/{productId}")
+    public String addVariation(@PathVariable(value = "productId") Long productId, @RequestBody ProductVariationDTO productVariationDto){
+        return productService.addProductVariation(productId, productVariationDto);
+    }
+
+    @GetMapping(path = "{userId}/{categoryId}/{productId}")
+    public ProductViewDTO viewProduct(@PathVariable(value = "userId") Long userId, @PathVariable(value = "productId") Long productId){
+        return productService.getProduct(userId, productId);
+    }
+
+    @GetMapping(path = "/{userId}/{categoryId}/{productId}/{variationId}")
+    public ProductVariationGetDTO getProductVariation(@PathVariable(value = "userId") Long userId, @PathVariable(value ="variationId") Long variationId){
+        return productService.getProductVariation(userId, variationId);
+    }
+
+    @GetMapping(path = "/{userId}/category/{categoryId}/product/{productId1}")
+    public List<ProductVariationGetDTO> getProductVariations(@PathVariable(value = "userId") Long userId, @PathVariable(value ="productId1") Long productId1){
+        return productService.getProductVariations(userId, productId1);
+    }
+
+    @GetMapping(path = "/{userId}/category/{categoryId}/product")
+    public Set<ProductViewDTO> viewProducts(@PathVariable(value = "userId") Long userId){
+        return productService.getProducts(userId);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public String deleteProduct(@PathVariable(value = "id") Long id){
+        return productService.deleteProduct(id);
+    }
+
+    @PutMapping(path = "{userId}/category/{categoryId}/product/{productId}")
+    public String updateProduct(@PathVariable(value = "userId") Long userId ,@PathVariable(value = "productId") Long productId, @RequestBody ProductViewDTO productViewDto){
+        return productService.updateProduct(userId, productId, productViewDto);
+    }
+
+    @PutMapping(path = "/{userId}/category/{categoryId}/product/{productId}/name")
+    public String updateProductName(@PathVariable(value = "userId") Long userId,@PathVariable(value = "categoryId") Long categoryId,@PathVariable(value = "productId") Long productId, @RequestBody ProductViewDTO productViewDto){
+        return productService.updateProductName(userId, categoryId, productId, productViewDto);
+    }
+
+    @PutMapping(path = "/{userId}/category/{categoryId}/product/{productId}/name/variation/{variationId}")
+    public String updateProductVariation(@PathVariable(value = "userId") Long userId, @PathVariable(value = "variationId") Long variationId,@RequestBody ProductVariationDTO productVariationDto){
+        return productService.updateProductVariation(userId,variationId,productVariationDto);
+    }
+
+    //category api
+    @GetMapping("/categories")
+    public List<Category> viewLeafCategories(@RequestParam Optional<Long> categoryId) {
+        return categoryService.viewCategoriesSameParent(categoryId);
+    }
+
 }

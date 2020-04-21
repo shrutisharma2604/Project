@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -149,7 +150,7 @@ public class ProductService {
             }
 
         } else {
-            throw new NotFoundException("Product Variation not found with variaton id : " + variationId);
+            throw new NotFoundException("Product Variation not found with variation id : " + variationId);
         }
 
     }
@@ -210,22 +211,13 @@ public class ProductService {
         }
     }
 
-    public String deleteProduct(Long userId, Long productId)  {
-
-        Optional<Product> product = productRepository.findById(productId);
-
-        if (product.isPresent()) {
-            if (userId.equals(product.get().getSeller().getId())) {
-                product.get().setDeleted(true);
-                productRepository.save(product.get());
-
-                return "Product deleted";
-            } else {
-                throw new BadRequestException("You don't have authorization to delete this product");
-            }
-        } else {
-            throw new NotFoundException("Product not found");
+    @Transactional
+    public String deleteProduct(Long id)  {
+        if (!productRepository.findById(id).isPresent()) {
+            return id + " product does not exist";
         }
+        productRepository.deleteById(id);
+        return "Product Deleted";
 
     }
 
@@ -258,10 +250,10 @@ public class ProductService {
         if (product.isPresent()) {
             if (userId.equals(product.get().getSeller().getId())) {
 
-                Long productId1 = productRepository.findUniqueProduct(productViewDto.getBrand(), categoryId, userId, productViewDto.getProductName());
+                Long productId1 = productRepository.findUniqueProduct(productViewDto.getBrand(), categoryId, userId, productViewDto.getName());
 
                 if (productId1 == null) {
-                    product.get().setName(productViewDto.getProductName());
+                    product.get().setName(productViewDto.getName());
                     productRepository.save(product.get());
                     return "Product updated successfully";
                 } else {
@@ -286,8 +278,7 @@ public class ProductService {
                     productVariation.get().setQuantity((long) productVariationDto.getQuantity());
                     productVariation.get().setActive(productVariationDto.isActive());
                     productVariation.get().setPrice(productVariationDto.getPrice());
-
-                    //////////// Image is to be added
+                    productVariation.get().setImage(productVariationDto.getImage());
 
                     productVariationRepo.save(productVariation.get());
 
@@ -402,21 +393,6 @@ public class ProductService {
 
     }
 
-    public String deActivateProduct(Long productId) {
-
-        Optional<Product> product = productRepository.findById(productId);
-
-        if (product.get().isActive()) {
-            product.get().setActive(false);
-            productRepository.save(product.get());
-
-            emailNotificationService.sendNotification("Product De-Activation", "Product name is : " + product.get().getName() + " and product id is : " + product.get().getId(), product.get().getSeller().getEmail());
-            return "Product deActivated";
-        } else {
-            throw new BadRequestException("Product is already deactivated");
-        }
-    }
-
     public String activateProduct(Long productId) {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -429,6 +405,20 @@ public class ProductService {
             return "Product Activated";
         } else {
             throw new BadRequestException("Product is already activated");
+        }
+    }
+    public String deActivateProduct(Long productId) {
+
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.get().isActive()) {
+            product.get().setActive(false);
+            productRepository.save(product.get());
+
+            emailNotificationService.sendNotification("Product De-Activation", "Product name is : " + product.get().getName() + " and product id is : " + product.get().getId(), product.get().getSeller().getEmail());
+            return "Product deActivated";
+        } else {
+            throw new BadRequestException("Product is already deactivated");
         }
     }
 
