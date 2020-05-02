@@ -1,13 +1,15 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.dto.AddressDTO;
+import com.example.EcommerceApp.EcommerceAppApplication;
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.*;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,23 +48,24 @@ public class RegisterService {
     @Autowired
     private AddressRepository addressRepository;
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(EcommerceAppApplication.class);
     @Transactional
     public String registerCustomer(CustomerDTO customerDto) {
 
         User user = userRepository.findByEmail(customerDto.getEmail());
         try {
             if (user.getEmail().equals(customerDto.getEmail())) {
-                return "Email already exists";
+                LOGGER.error("Email already exists");
             }
             if (customerDto.getPassword().equals(customerDto.getConfirmPassword())) {
-                return "Password does not match";
+                LOGGER.error("Password does not match");
             }
         } catch (NullPointerException ex) {
 
         }
         boolean isValidPassword = passwordValidation.isValid(customerDto.getPassword());
         if (!isValidPassword) {
-            return "password is invalid";
+            LOGGER.error("password is invalid");
         }
         customerDto.setPassword(passwordEncoder.encode(customerDto.getPassword()));
 

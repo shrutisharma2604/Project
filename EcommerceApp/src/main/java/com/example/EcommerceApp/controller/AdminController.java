@@ -2,6 +2,7 @@ package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.AllProductDTO;
 import com.example.EcommerceApp.dto.CategoryDTO;
+import com.example.EcommerceApp.dto.CategoryMetaDataFieldDTO;
 import com.example.EcommerceApp.dto.ProductVariationGetDTO;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
 import com.example.EcommerceApp.services.AdminService;
@@ -161,5 +162,25 @@ public class AdminController {
     @GetMapping("/all")
     public List<CategoryDTO> viewCategories(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, @RequestParam(defaultValue = "id") String SortBy, @RequestParam(defaultValue = "ASC") String order, @RequestParam Optional<String> query) {
         return categoryService.viewCategories(page,size,SortBy,order,query);
+    }
+    @PostMapping("/addCategoryMetaData")
+    public String addCategoryMetadata(@RequestBody CategoryMetaDataFieldDTO fieldDTO, HttpServletResponse response) {
+        String getMessage = categoryService.addCategoryMetaData(fieldDTO);
+        if (getMessage.contains("Category Meta Data Field added successfully")) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
+    }
+    @PostMapping("/updateCategoryMetaData")
+    public String updateCategoryMetadata(@RequestBody CategoryMetaDataFieldDTO fieldDTO, HttpServletResponse response) {
+        String getMessage = categoryService.addCategoryMetaData(fieldDTO);
+        if (getMessage.contains("Field Updated Successfully")) {
+            response.setStatus(HttpServletResponse.SC_CREATED);
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return getMessage;
     }
 }

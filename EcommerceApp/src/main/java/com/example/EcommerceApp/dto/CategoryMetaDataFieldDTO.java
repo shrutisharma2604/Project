@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 public class CategoryMetaDataFieldDTO {
  private Long categoryId;
- private HashMap<String, HashSet<String>> filedIdValues;
+ private HashMap<String, HashSet<String>> filedValues;
 
     public Long getCategoryId() {
         return categoryId;
@@ -15,19 +15,19 @@ public class CategoryMetaDataFieldDTO {
         this.categoryId = categoryId;
     }
 
-    public HashMap<String, HashSet<String>> getFiledIdValues() {
-        return filedIdValues;
+    public HashMap<String, HashSet<String>> getFiledValues() {
+        return filedValues;
     }
 
-    public void setFiledIdValues(HashMap<String, HashSet<String>> filedIdValues) {
-        this.filedIdValues = filedIdValues;
+    public void setFiledValues(HashMap<String, HashSet<String>> filedValues) {
+        this.filedValues = filedValues;
     }
 
     @Override
     public String toString() {
         return "CategoryMetaDataFieldDto{" +
                 "categoryId=" + categoryId +
-                ", filedIdValues=" + filedIdValues +
+                ", filedIdValues=" + filedValues +
                 '}';
     }
 }
