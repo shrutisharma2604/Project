@@ -1,8 +1,6 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.dto.CategoryDTO;
-import com.example.EcommerceApp.dto.CategoryMetaDataFieldDTO;
-import com.example.EcommerceApp.dto.FilterCategoryDTO;
+import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.Category;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
 import com.example.EcommerceApp.entities.CategoryMetaDataFieldValue;
@@ -262,56 +260,37 @@ public class CategoryService {
         if(!category.isPresent()){
             throw new NotFoundException("category doesn't exist");
         }
+        Optional<CategoryMetaDataField> categoryMetaDataField=categoryMetaDataFieldRepo.findByMetaDataName(categoryMetaDataFieldDTO.getName());
+        if(!categoryMetaDataField.isPresent()){
+            throw new NotFoundException("meta data field doesn't exist");
+        }
         HashMap<String,HashSet<String>> fieldValue=categoryMetaDataFieldDTO.getFiledValues();
-        System.out.println("field values>>>>>>>>>>>>>>>>>>>>>>>>"+ fieldValue);
-        Set<String> metaData= fieldValue.keySet();
-        System.out.println("metadata>>>>>>>>>>>>>>>>>>" + metaData);
-        metaData.forEach(id->{
-            Optional<CategoryMetaDataField> categoryMetaDataField=categoryMetaDataFieldRepo.findById(Long.parseLong(id));
-            if(!categoryMetaDataField.isPresent()){
-                throw new NotFoundException("meta data field doesn't exist");
-            }
-        });
-        metaData.forEach(id->{
-            if(fieldValue.get(id).isEmpty()){
-                throw new NotFoundException("field doesn't have values");
-            }
-        });
         CategoryMetaDataFieldValue categoryMetaDataFieldValue=new CategoryMetaDataFieldValue();
         categoryMetaDataFieldValue.setCategory(category.get());
-        metaData.forEach(id->{
-            Optional<CategoryMetaDataField> categoryMetaDataField = categoryMetaDataFieldRepo.findById(Long.parseLong(id));
-            categoryMetaDataFieldValue.setCategoryMetaDataField(categoryMetaDataField.get());
-            HashSet<String> values = fieldValue.get(id);
-            String value= String.join(",",values);
-            categoryMetaDataFieldValue.setValue(value);
-            categoryMetaDataField.get().getCategoryMetaDataFieldValueSet().add(categoryMetaDataFieldValue);
-            categoryMetaDataFieldRepo.save(categoryMetaDataField.get());
-        });
+        categoryMetaDataFieldValue.setCategoryMetaDataField(categoryMetaDataField.get());
+        categoryMetaDataFieldValue.setValue(String.valueOf(fieldValue));
+        categoryMetaDataField.get().getCategoryMetaDataFieldValueSet().add(categoryMetaDataFieldValue);
+        categoryMetaDataFieldRepo.save(categoryMetaDataField.get());
         return "Category Meta Data Field added successfully";
 
     }
-    public String updateCategoryMetaData(CategoryMetaDataFieldDTO categoryMetaDataFieldDTO) {
-        Optional<Category> category = categoryRepository.findById(categoryMetaDataFieldDTO.getCategoryId());
-        if (!category.isPresent()) {
+    public String updateCategoryMetaData(CategoryMetaDataFieldDTO categoryMetaDataFieldDTO,Long id)  {
+        Optional<Category> category=categoryRepository.findById(categoryMetaDataFieldDTO.getCategoryId());
+        if(!category.isPresent()){
             throw new NotFoundException("category doesn't exist");
         }
-        HashMap<String, HashSet<String>> fieldValue = categoryMetaDataFieldDTO.getFiledValues();
-        Set<String> metaData = fieldValue.keySet();
-        metaData.forEach(id -> {
-            Optional<CategoryMetaDataField> categoryMetaDataField = categoryMetaDataFieldRepo.findById(Long.parseLong(id));
-            if (!categoryMetaDataField.isPresent()) {
-                throw new NotFoundException("meta data field doesn't exist");
-            }
-            Optional<CategoryMetaDataFieldValue> linkSet=categoryMetaDataFieldValueRepo.findByMetadataId(categoryMetaDataFieldDTO.getCategoryId(),Long.parseLong(id));
-            if(!linkSet.isPresent()){
-                throw new NotFoundException("meta data filed is not associate with any category");
-            }
-            String value=String.join(",",categoryMetaDataFieldDTO.getFiledValues().get(id));
-            linkSet.get().setValue(value);
-            categoryMetaDataField.get().getCategoryMetaDataFieldValueSet().add(linkSet.get());
-            categoryMetaDataFieldRepo.save(categoryMetaDataField.get());
-        });
-        return "Field Updated Successfully";
+        Optional<CategoryMetaDataField> categoryMetaDataField=categoryMetaDataFieldRepo.findByMetaDataName(categoryMetaDataFieldDTO.getName());
+        if(!categoryMetaDataField.isPresent()){
+            throw new NotFoundException("meta data field doesn't exist");
+        }
+        HashMap<String,HashSet<String>> fieldValue=categoryMetaDataFieldDTO.getFiledValues();
+        Optional<CategoryMetaDataFieldValue> categoryMetaDataFieldValue=categoryMetaDataFieldValueRepo.findById(id);
+        categoryMetaDataFieldValue.get().setCategory(category.get());
+        categoryMetaDataFieldValue.get().setCategoryMetaDataField(categoryMetaDataField.get());
+        categoryMetaDataFieldValue.get().setValue(String.valueOf(fieldValue));
+        categoryMetaDataField.get().getCategoryMetaDataFieldValueSet().add(categoryMetaDataFieldValue.get());
+        categoryMetaDataFieldValueRepo.save(categoryMetaDataFieldValue.get());
+        return "Field updated successfully";
+
     }
 }

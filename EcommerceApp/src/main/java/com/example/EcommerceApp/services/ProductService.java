@@ -1,21 +1,16 @@
 package com.example.EcommerceApp.services;
 
 import com.example.EcommerceApp.dto.*;
-import com.example.EcommerceApp.entities.Category;
-import com.example.EcommerceApp.entities.Product;
-import com.example.EcommerceApp.entities.Product_Variation;
-import com.example.EcommerceApp.entities.Seller;
+import com.example.EcommerceApp.entities.*;
 import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.exception.BadRequestException;
 import com.example.EcommerceApp.exception.NotFoundException;
-import com.example.EcommerceApp.repositories.CategoryRepository;
-import com.example.EcommerceApp.repositories.ProductRepository;
-import com.example.EcommerceApp.repositories.ProductVariationRepo;
-import com.example.EcommerceApp.repositories.SellerRepository;
+import com.example.EcommerceApp.repositories.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -37,6 +32,10 @@ public class ProductService {
     @Autowired
     private ProductVariationRepo productVariationRepo;
 
+    @Autowired
+    private ProductVariantRepo productVariantRepo;
+
+    Logger logger = LoggerFactory.getLogger(ProductService.class);
    public String addProduct(Long sellerId, Long categoryId, ProductDTO productDto)  {
 
         Optional<Category> category = categoryRepository.findById(categoryId);
@@ -75,7 +74,8 @@ public class ProductService {
     public String addProductVariation(Long productId, ProductVariationDTO productVariationDto)  {
 
         Optional<Product> product = productRepository.findById(productId);
-
+        Long vid=productVariationDto.getId();
+        Integer qty=productVariationDto.getQuantity();
         if (product.isPresent()) {
             if (productVariationDto.getQuantity() > 0) {
                 if (productVariationDto.getPrice() > 0) {
@@ -83,6 +83,11 @@ public class ProductService {
                         Product_Variation productVariation = new Product_Variation();
                         BeanUtils.copyProperties(productVariationDto, productVariation);
                         productVariation.setProduct(product.get());
+
+                        ProductVariant productVariant=new ProductVariant();
+                        productVariant.setVid(vid.toString());
+                        productVariant.setQuantityAvailable(qty.toString());
+                        productVariantRepo.save(productVariant);
                         productVariationRepo.save(productVariation);
 
                     } else {
@@ -270,12 +275,11 @@ public class ProductService {
     public String updateProductVariation(Long userId, Long variationId, ProductVariationDTO productVariationDto)  {
 
         Optional<Product_Variation> productVariation = productVariationRepo.findById(variationId);
-
         if (productVariation.isPresent()) {
             if (userId.equals(productVariation.get().getProduct().getSeller().getId())) {
                 if (!(productVariation.get().getProduct().isDeleted()) && productVariation.get().getProduct().isActive()) {
 
-                    productVariation.get().setQuantity((long) productVariationDto.getQuantity());
+                    productVariation.get().setQuantity((int) productVariationDto.getQuantity());
                     productVariation.get().setActive(productVariationDto.isActive());
                     productVariation.get().setPrice(productVariationDto.getPrice());
                     productVariation.get().setImage(productVariationDto.getImage());
@@ -296,6 +300,41 @@ public class ProductService {
         }
 
     }
+    public void autoUpdateVariationQuantity() {
+
+        Iterable<Product_Variation> variations = productVariationRepo.findAll();
+        Iterator<Product_Variation> variationsIterator = variations.iterator();
+
+        while (variationsIterator.hasNext()) {
+            Product_Variation productVariation = variationsIterator.next();
+            Long vid = productVariation.getId();
+
+            //fetching variant from RedisDb
+            Optional<ProductVariant> optionalProductVariant = productVariantRepo.findById(vid.toString());
+
+            if (optionalProductVariant.isPresent()) {
+
+                ProductVariant productVariant = optionalProductVariant.get();
+
+                // checking Quantity from Redis
+                String qty = productVariant.getQuantityAvailable();
+
+                // update Qty from Redis
+                productVariation.setQuantity(Integer.parseInt(qty));
+
+                // saving the Updated values in DB too
+                productVariationRepo.save(productVariation);
+
+                logger.info("Variant Quantity Updated from RedisDb and Stored in MySql Variant");
+
+            }
+            else {
+                logger.error("Unable to find particular Variant from RedisDb for selected MySql Product Variation ");
+            }
+        }
+
+    }
+
 
     public List<ProductVariationGetDTO> getProductForAdmin(Long productId)  {
 

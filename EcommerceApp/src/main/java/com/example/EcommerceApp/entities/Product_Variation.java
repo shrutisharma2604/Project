@@ -1,16 +1,30 @@
 package com.example.EcommerceApp.entities;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Product_Variation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Long quantity;
+    private Integer quantity;
     private Long price;
     private String image;
     private boolean isActive;
+    @Column
+    @CreatedDate
+    private Date createdDate;
+
+    @Column
+    @LastModifiedDate
+    private Date modifiedDate;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -23,11 +37,11 @@ public class Product_Variation {
         this.id = id;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

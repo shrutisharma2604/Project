@@ -1,9 +1,14 @@
 package com.example.EcommerceApp.entities;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
@@ -18,6 +23,10 @@ public class User {
     private boolean isDeleted;
     private boolean isExpired;
     private boolean isLocked;
+    @Column
+    @CreatedDate
+    private Date createdDate;
+
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id")
             ,inverseJoinColumns = @JoinColumn(name ="role_id",referencedColumnName = "id"))

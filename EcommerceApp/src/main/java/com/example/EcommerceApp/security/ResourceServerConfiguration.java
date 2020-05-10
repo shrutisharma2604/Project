@@ -3,6 +3,7 @@ package com.example.EcommerceApp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableJpaAuditing
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
@@ -57,6 +59,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/swagger-ui.html",
                         "/webjars/**").anonymous()
                 .antMatchers("/register/**").permitAll()
+                .antMatchers("/image/**").permitAll()
                 .antMatchers("/logout/**").hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .antMatchers("/admin/home/**").permitAll()//hasAnyRole("ADMIN")
                 .antMatchers("/customer/home/**").permitAll()//hasAnyRole("CUSTOMER")

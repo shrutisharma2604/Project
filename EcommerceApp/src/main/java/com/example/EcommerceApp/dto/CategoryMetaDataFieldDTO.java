@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 public class CategoryMetaDataFieldDTO {
  private Long categoryId;
+ private String name;
  private HashMap<String, HashSet<String>> filedValues;
 
     public Long getCategoryId() {
@@ -23,11 +24,20 @@ public class CategoryMetaDataFieldDTO {
         this.filedValues = filedValues;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "CategoryMetaDataFieldDto{" +
+        return "CategoryMetaDataFieldDTO{" +
                 "categoryId=" + categoryId +
-                ", filedIdValues=" + filedValues +
+                ", name='" + name + '\'' +
+                ", filedValues=" + filedValues +
                 '}';
     }
 }

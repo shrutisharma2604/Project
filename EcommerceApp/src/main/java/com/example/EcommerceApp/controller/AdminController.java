@@ -1,9 +1,6 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.dto.AllProductDTO;
-import com.example.EcommerceApp.dto.CategoryDTO;
-import com.example.EcommerceApp.dto.CategoryMetaDataFieldDTO;
-import com.example.EcommerceApp.dto.ProductVariationGetDTO;
+import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
 import com.example.EcommerceApp.services.AdminService;
 import com.example.EcommerceApp.services.CategoryService;
@@ -174,8 +171,8 @@ public class AdminController {
         return getMessage;
     }
     @PostMapping("/updateCategoryMetaData")
-    public String updateCategoryMetadata(@RequestBody CategoryMetaDataFieldDTO fieldDTO, HttpServletResponse response) {
-        String getMessage = categoryService.addCategoryMetaData(fieldDTO);
+    public String updateCategoryMetadata(@RequestBody CategoryMetaDataFieldDTO fieldValueDTO, Long id, HttpServletResponse response) {
+        String getMessage = categoryService.updateCategoryMetaData(fieldValueDTO,id);
         if (getMessage.contains("Field Updated Successfully")) {
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {

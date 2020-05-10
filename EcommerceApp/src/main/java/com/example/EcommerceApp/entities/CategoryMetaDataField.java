@@ -8,6 +8,7 @@ import java.util.Set;
 public class CategoryMetaDataField {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
     private String name;
 

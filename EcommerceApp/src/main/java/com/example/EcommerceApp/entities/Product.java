@@ -1,10 +1,16 @@
 package com.example.EcommerceApp.entities;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -17,6 +23,13 @@ public class Product {
     private boolean isCancellable;
     private boolean isActive;
     private boolean isDeleted;
+    @Column
+    @CreatedDate
+    private Date createdDate;
+
+    @Column
+    @LastModifiedDate
+    private Date modifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "seller_user_id")

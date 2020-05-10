@@ -1,6 +1,9 @@
 package com.example.EcommerceApp.security;
 
+import com.example.EcommerceApp.entities.Role;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Set;
 
 public class GrantedAuthorityImpl implements GrantedAuthority {
     private String authority;

@@ -4,7 +4,6 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.AddressDTO;
 import com.example.EcommerceApp.dto.SellerProfileDTO;
 import com.example.EcommerceApp.entities.Address;
-import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.exception.NotFoundException;

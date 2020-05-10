@@ -13,7 +13,6 @@ import java.util.Locale;
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
-
 public class EcommerceAppApplication {
 
 	public static void main(String[] args) {
@@ -31,5 +30,4 @@ public class EcommerceAppApplication {
 		messageSource.setBasename("messages");
 		return messageSource;
 	}
-
 }
