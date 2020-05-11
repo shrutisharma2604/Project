@@ -38,7 +38,7 @@ public class SellerController {
     public String updateProfile(@Valid @RequestBody SellerProfileDTO profileDto, @PathVariable("id") Long id){
         return sellerService.updateSeller(profileDto,id);
     }
-    @PatchMapping("/updatePassword/{id}")
+    @PatchMapping(path = "/updatePassword/{id}")
     public String passwordUpdate(@PathVariable(value = "id") Long id,
                                  @RequestParam String oldPass,@RequestParam String newPass,@RequestParam String confirmPass, HttpServletResponse response) {
         if (passwordValidation.validPassword(oldPass, newPass, confirmPass)) {

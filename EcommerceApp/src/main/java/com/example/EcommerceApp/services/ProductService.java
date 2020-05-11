@@ -335,6 +335,17 @@ public class ProductService {
 
     }
 
+    /*public ProductVariant getVariant(String vid) {
+
+        Optional<ProductVariant> productVariant = productVariantRepo.findById(vid);
+        if (productVariant.isPresent()) {
+            return productVariant.get();
+        }
+        else {
+            throw new NotFoundException("id is invalid");
+        }
+    }*/
+
 
     public List<ProductVariationGetDTO> getProductForAdmin(Long productId)  {
 

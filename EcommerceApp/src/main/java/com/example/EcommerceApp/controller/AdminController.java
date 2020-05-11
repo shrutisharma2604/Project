@@ -2,6 +2,7 @@ package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
+import com.example.EcommerceApp.entities.ProductVariant;
 import com.example.EcommerceApp.services.AdminService;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.ProductService;
@@ -10,6 +11,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.Cacheable;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
@@ -180,4 +183,8 @@ public class AdminController {
         }
         return getMessage;
     }
+    /*@GetMapping("/view/{id}")
+    public ProductVariant viewVariant(@PathVariable("id") String id){
+        return productService.getVariant(id);
+    }*/
 }

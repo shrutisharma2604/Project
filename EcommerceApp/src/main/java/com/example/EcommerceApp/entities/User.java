@@ -19,6 +19,7 @@ public class User {
     private String middleName;
     private String lastName;
     private String password;
+    private Long imageId;
     private boolean isActive;
     private boolean isDeleted;
     private boolean isExpired;
@@ -133,6 +134,14 @@ public class User {
 
     public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     @Override

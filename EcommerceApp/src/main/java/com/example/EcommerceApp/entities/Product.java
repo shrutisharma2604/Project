@@ -17,6 +17,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
+    private Long imageId;
 
     private String brand;
     private boolean isReturnable;
@@ -145,6 +146,14 @@ public class Product {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     @Override

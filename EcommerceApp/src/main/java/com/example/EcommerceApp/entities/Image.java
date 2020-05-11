@@ -1,6 +1,7 @@
 package com.example.EcommerceApp.entities;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 
 @Entity
@@ -12,11 +13,22 @@ public class Image {
     private String fileName;
     private String path;
     private Boolean status;
-
-    @OneToOne
-    private User createdBy;
-
+    private Long userId;
     private Date createdOn;
+    private String fileType;
+
+    @Lob
+    private byte[] data;
+
+    public Image() {
+
+    }
+
+    public Image(String fileName, String fileType, byte[] data) {
+        this.fileName = fileName;
+        this.fileType = fileType;
+        this.data = data;
+    }
 
     public Long getId() {
         return id;
@@ -50,12 +62,12 @@ public class Image {
         this.status = status;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Date getCreatedOn() {
@@ -64,5 +76,35 @@ public class Image {
 
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", fileName='" + fileName + '\'' +
+                ", path='" + path + '\'' +
+                ", status=" + status +
+                ", userId=" + userId +
+                ", createdOn=" + createdOn +
+                ", fileType='" + fileType + '\'' +
+                ", data=" + Arrays.toString(data) +
+                '}';
     }
 }

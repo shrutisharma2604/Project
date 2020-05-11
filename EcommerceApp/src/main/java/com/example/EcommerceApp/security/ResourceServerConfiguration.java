@@ -60,6 +60,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/webjars/**").anonymous()
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/image/**").permitAll()
+                .antMatchers("/images/**").permitAll()
                 .antMatchers("/logout/**").hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .antMatchers("/admin/home/**").permitAll()//hasAnyRole("ADMIN")
                 .antMatchers("/customer/home/**").permitAll()//hasAnyRole("CUSTOMER")

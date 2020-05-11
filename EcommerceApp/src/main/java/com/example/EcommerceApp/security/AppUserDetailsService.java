@@ -3,7 +3,6 @@ package com.example.EcommerceApp.security;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.validation.EmailValidation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,7 +34,7 @@ public class AppUserDetailsService implements UserDetailsService {
         UserDetails userDetails = userDao.loadUserByUserEmail(email);
         return userDetails;
     }
-  /*  @Override
+    /*@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("Trying to authenticate user ::" + username);
         if (userDao.loadUserByUsername(username)==null)

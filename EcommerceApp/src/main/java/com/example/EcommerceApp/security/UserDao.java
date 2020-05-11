@@ -31,7 +31,7 @@ public class UserDao {
         }
 
     }
-   /* public AppUser loadUserByUsername(String username) {
+    /*public AppUser loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         System.out.println(user);
         if (user != null) {
