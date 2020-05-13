@@ -6,6 +6,8 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.CustomerActivateRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -26,13 +28,14 @@ public class CustomerActivateService {
     @Autowired
     EmailNotificationService emailNotificationService;
 
+    Logger logger = LoggerFactory.getLogger(CustomerActivateService.class);
     @Transactional
     public String activateCustomer(String token) {
         CustomerActivate customerActivate = customerActivateRepo.findByToken(token);
-        System.out.println("customer is"+customerActivate);
+        logger.info("customer is"+customerActivate);
         try {
             if (customerActivate.getToken().equals(null)) {
-                System.out.println("success");
+                logger.info("success");
             }
         } catch (NullPointerException ex) {
             return "invalid token";

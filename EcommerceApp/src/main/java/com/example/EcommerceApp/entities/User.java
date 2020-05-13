@@ -144,21 +144,4 @@ public class User {
         this.imageId = imageId;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
-                ", isActive=" + isActive +
-                ", isDeleted=" + isDeleted +
-                ", isExpired=" + isExpired +
-                ", isLocked=" + isLocked +
-                ", roles=" + roles +
-                ", addresses=" + addresses +
-                '}';
-    }
 }

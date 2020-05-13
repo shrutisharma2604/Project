@@ -1,5 +1,7 @@
 package com.example.EcommerceApp.entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,13 +9,15 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private long quantity;
+    private Integer quantity;
     private boolean isWishListItem;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_user_id")
     private Customer customer;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "product_variation_id")
     private Product_Variation productVariation;
@@ -26,12 +30,20 @@ public class Cart {
         this.id = id;
     }
 
-    public long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Product_Variation getProductVariation() {
+        return productVariation;
+    }
+
+    public void setProductVariation(Product_Variation productVariation) {
+        this.productVariation = productVariation;
     }
 
     public boolean isWishListItem() {
@@ -57,6 +69,7 @@ public class Cart {
                 ", quantity=" + quantity +
                 ", isWishListItem=" + isWishListItem +
                 ", customer=" + customer +
+                ", productVariation=" + productVariation +
                 '}';
     }
 }

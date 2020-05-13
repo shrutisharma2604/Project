@@ -1,5 +1,7 @@
 package com.example.EcommerceApp.entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -12,6 +14,8 @@ public class Orders {
     private Double amountPaid;
     @Temporal(TemporalType.DATE)
     private Date dateCreated;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "customer_user_id")
     private Customer customer;

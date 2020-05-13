@@ -23,7 +23,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -91,7 +90,6 @@ public class CustomerService {
             customer.get().setFirstName(profileDto.getFirstName());
             customer.get().setLastName(profileDto.getLastName());
             customer.get().setContact(profileDto.getContact());
-            customer.get().setEmail(profileDto.getEmail());
             customer.get().setImage(profileDto.getImage());
             customerRepository.save(customer.get());
             return "Profile updated successfully";

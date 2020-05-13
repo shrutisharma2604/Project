@@ -1,5 +1,7 @@
 package com.example.EcommerceApp.entities;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -9,11 +11,12 @@ public class OrderProduct {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private Integer quantity;
-    private Double price;
+    private Long price;
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Orders order;
-    @ManyToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_variation_id")
     private Product_Variation product_variation;
 
@@ -36,11 +39,11 @@ public class OrderProduct {
         this.quantity = quantity;
     }
 
-    public Double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

@@ -183,8 +183,5 @@ public class AdminController {
         }
         return getMessage;
     }
-    /*@GetMapping("/view/{id}")
-    public ProductVariant viewVariant(@PathVariable("id") String id){
-        return productService.getVariant(id);
-    }*/
+
 }

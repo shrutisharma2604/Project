@@ -1,15 +1,17 @@
 package com.example.EcommerceApp.services;
 
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.entities.Customer;
 import com.example.EcommerceApp.entities.Seller;
 import com.example.EcommerceApp.entities.User;
-import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.repositories.CustomerRepository;
 import com.example.EcommerceApp.repositories.SellerRepository;
 import com.example.EcommerceApp.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -38,6 +40,7 @@ public class AdminService {
     @Autowired
     private CustomerActivateService customerActivateService;
 
+    Logger logger = LoggerFactory.getLogger(AdminService.class);
     public String activateCustomer(@PathVariable Long id, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
@@ -52,7 +55,7 @@ public class AdminService {
             return "Success";
         }
         userRepository.save(user.get());
-        System.out.println("already activated");
+        logger.info("already activated");
         return "Success";
     }
 
@@ -70,7 +73,7 @@ public class AdminService {
             return "Success";
         }
         userRepository.save(user.get());
-        System.out.println("already deactivated");
+        logger.info("already deactivated");
         return "Success";
     }
 
@@ -88,7 +91,7 @@ public class AdminService {
             return "Success";
         }
         userRepository.save(user.get());
-        System.out.println("already activated");
+        logger.info("already activated");
         return "Success";
     }
 
@@ -106,7 +109,7 @@ public class AdminService {
             return "Success";
         }
         userRepository.save(user.get());
-        System.out.println("already deactivated");
+        logger.info("already deactivated");
         return "Success";
     }
 

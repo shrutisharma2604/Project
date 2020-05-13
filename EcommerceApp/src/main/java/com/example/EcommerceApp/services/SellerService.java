@@ -58,7 +58,6 @@ public class SellerService {
             seller.get().setFirstName(sellerProfileDto.getFirstName());
             seller.get().setLastName(sellerProfileDto.getLastName());
             seller.get().setCompanyContact(sellerProfileDto.getCompanyContact());
-            seller.get().setGST(sellerProfileDto.getGST());
             seller.get().setImage(sellerProfileDto.getImage());
 
             sellerRepository.save(seller.get());

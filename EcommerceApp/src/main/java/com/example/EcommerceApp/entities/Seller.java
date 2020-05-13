@@ -57,13 +57,5 @@ public class Seller extends User{
         this.image = image;
     }
 
-    @Override
-    public String toString() {
-        return "Seller{" +
-                "GST='" + GST + '\'' +
-                ", companyContact='" + companyContact + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", products=" + products +
-                '}';
-    }
+
 }

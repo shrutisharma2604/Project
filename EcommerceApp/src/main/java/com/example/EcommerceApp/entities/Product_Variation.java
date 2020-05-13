@@ -1,5 +1,6 @@
 package com.example.EcommerceApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,10 +13,12 @@ import java.util.Date;
 public class Product_Variation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @JsonIgnore
+    private Long product_variant_id;
+    private String variantName;
     private Integer quantity;
     private Long price;
-    private String image;
+    private Long imageId;
     private boolean isActive;
     @Column
     @CreatedDate
@@ -29,12 +32,20 @@ public class Product_Variation {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Long getId() {
-        return id;
+    public Long getProduct_variant_id() {
+        return product_variant_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProduct_variant_id(Long product_variant_id) {
+        this.product_variant_id = product_variant_id;
+    }
+
+    public String getVariantName() {
+        return variantName;
+    }
+
+    public void setVariantName(String variantName) {
+        this.variantName = variantName;
     }
 
     public Integer getQuantity() {
@@ -53,12 +64,12 @@ public class Product_Variation {
         this.price = price;
     }
 
-    public String getImage() {
-        return image;
+    public Long getImageId() {
+        return imageId;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     public Product getProduct() {
@@ -80,13 +91,15 @@ public class Product_Variation {
     @Override
     public String toString() {
         return "Product_Variation{" +
-                "id=" + id +
+                "product_variant_id=" + product_variant_id +
+                ", variantName='" + variantName + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
-                ", image='" + image + '\'' +
+                ", imageId=" + imageId +
                 ", isActive=" + isActive +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
                 ", product=" + product +
                 '}';
     }
-
 }

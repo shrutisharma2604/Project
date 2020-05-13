@@ -7,7 +7,7 @@ public class OrderAddress {
     private String addressLine;
     private String city;
     private String state;
-    private String zipCode;
+    private Integer zipCode;
     private String label;
 
     public String getAddressLine() {
@@ -34,11 +34,11 @@ public class OrderAddress {
         this.state = state;
     }
 
-    public String getZipCode() {
+    public Integer getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public void setZipCode(Integer zipCode) {
         this.zipCode = zipCode;
     }
 

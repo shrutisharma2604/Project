@@ -156,21 +156,5 @@ public class Product {
         this.imageId = imageId;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", brand='" + brand + '\'' +
-                ", isReturnable=" + isReturnable +
-                ", isCancellable=" + isCancellable +
-                ", isActive=" + isActive +
-                ", seller=" + seller +
-                ", product_variations=" + product_variations +
-                ", category=" + category +
-                ", reviews=" + reviews +
-                '}';
-    }
 
 }

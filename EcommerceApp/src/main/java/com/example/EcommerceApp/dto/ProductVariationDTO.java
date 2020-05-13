@@ -1,18 +1,18 @@
 package com.example.EcommerceApp.dto;
 
 public class ProductVariationDTO {
-    private Long id;
+    private Long product_variant_id;
     private Long price;
     private String image;
     private Integer quantity;
     private boolean isActive;
 
-    public Long getId() {
-        return id;
+    public Long getProduct_variant_id() {
+        return product_variant_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProduct_variant_id(Long product_variant_id) {
+        this.product_variant_id = product_variant_id;
     }
 
     public Long getPrice() {
@@ -50,7 +50,7 @@ public class ProductVariationDTO {
     @Override
     public String toString() {
         return "ProductVariationDTO{" +
-                "id=" + id +
+                "product_variant_id=" + product_variant_id +
                 ", price=" + price +
                 ", image='" + image + '\'' +
                 ", quantity=" + quantity +

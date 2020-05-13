@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 public class ProductVariant {
     @Id
     private String vid;
-    private String quantityAvailable;
+    private String quantity;
 
     public String getVid() {
         return vid;
@@ -16,12 +16,12 @@ public class ProductVariant {
         this.vid = vid;
     }
 
-    public String getQuantityAvailable() {
-        return quantityAvailable;
+
+    public String getQuantity() {
+        return quantity;
     }
 
-    public void setQuantityAvailable(String quantityAvailable) {
-        this.quantityAvailable = quantityAvailable;
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
-
 }

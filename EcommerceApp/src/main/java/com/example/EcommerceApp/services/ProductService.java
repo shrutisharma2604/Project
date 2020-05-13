@@ -1,16 +1,17 @@
 package com.example.EcommerceApp.services;
 
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.exception.BadRequestException;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.repositories.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -72,10 +73,7 @@ public class ProductService {
     }
 
     public String addProductVariation(Long productId, ProductVariationDTO productVariationDto)  {
-
         Optional<Product> product = productRepository.findById(productId);
-        Long vid=productVariationDto.getId();
-        Integer qty=productVariationDto.getQuantity();
         if (product.isPresent()) {
             if (productVariationDto.getQuantity() > 0) {
                 if (productVariationDto.getPrice() > 0) {
@@ -85,8 +83,10 @@ public class ProductService {
                         productVariation.setProduct(product.get());
 
                         ProductVariant productVariant=new ProductVariant();
+                        Long vid=productVariationDto.getProduct_variant_id();
+                        Integer qty=productVariationDto.getQuantity();
                         productVariant.setVid(vid.toString());
-                        productVariant.setQuantityAvailable(qty.toString());
+                        productVariant.setQuantity(qty.toString());
                         productVariantRepo.save(productVariant);
                         productVariationRepo.save(productVariation);
 
@@ -282,7 +282,6 @@ public class ProductService {
                     productVariation.get().setQuantity((int) productVariationDto.getQuantity());
                     productVariation.get().setActive(productVariationDto.isActive());
                     productVariation.get().setPrice(productVariationDto.getPrice());
-                    productVariation.get().setImage(productVariationDto.getImage());
 
                     productVariationRepo.save(productVariation.get());
 
@@ -300,52 +299,6 @@ public class ProductService {
         }
 
     }
-    public void autoUpdateVariationQuantity() {
-
-        Iterable<Product_Variation> variations = productVariationRepo.findAll();
-        Iterator<Product_Variation> variationsIterator = variations.iterator();
-
-        while (variationsIterator.hasNext()) {
-            Product_Variation productVariation = variationsIterator.next();
-            Long vid = productVariation.getId();
-
-            //fetching variant from RedisDb
-            Optional<ProductVariant> optionalProductVariant = productVariantRepo.findById(vid.toString());
-
-            if (optionalProductVariant.isPresent()) {
-
-                ProductVariant productVariant = optionalProductVariant.get();
-
-                // checking Quantity from Redis
-                String qty = productVariant.getQuantityAvailable();
-
-                // update Qty from Redis
-                productVariation.setQuantity(Integer.parseInt(qty));
-
-                // saving the Updated values in DB too
-                productVariationRepo.save(productVariation);
-
-                logger.info("Variant Quantity Updated from RedisDb and Stored in MySql Variant");
-
-            }
-            else {
-                logger.error("Unable to find particular Variant from RedisDb for selected MySql Product Variation ");
-            }
-        }
-
-    }
-
-    /*public ProductVariant getVariant(String vid) {
-
-        Optional<ProductVariant> productVariant = productVariantRepo.findById(vid);
-        if (productVariant.isPresent()) {
-            return productVariant.get();
-        }
-        else {
-            throw new NotFoundException("id is invalid");
-        }
-    }*/
-
 
     public List<ProductVariationGetDTO> getProductForAdmin(Long productId)  {
 

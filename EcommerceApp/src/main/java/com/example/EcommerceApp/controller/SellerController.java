@@ -2,6 +2,7 @@ package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.Category;
+import com.example.EcommerceApp.entities.ProductVariant;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.services.SellerService;

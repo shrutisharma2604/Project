@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -36,6 +37,7 @@ public class CategoryService {
     @Autowired
     private ProductVariationRepo productVariationRepo;
 
+    Logger logger = LoggerFactory.getLogger(CategoryService.class);
     public String addMetadata(String fieldName) {
         if (categoryMetaDataFieldRepo.findByName(fieldName) != null) {
             return  "field name already exist";
@@ -65,15 +67,14 @@ public class CategoryService {
             List<Category> rootCategory = categoryRepository.findRootCategories();
             rootCategory.forEach(r->{
                 if (r.getName().equals(name)) {
-                    System.out.printf(name+ "root category already exist");
+                    logger.info(name+ "root category already exist");
                 }
             });
             List<Optional<Category>> subCategory = categoryRepository.findByParentId(parentId.get());
-            System.out.println(subCategory);
             if (!subCategory.isEmpty()) {
                 subCategory.forEach(s->{
                     if (s.get().getName().equals(name)) {
-                        System.out.println(name + " already exist");
+                        logger.info(name + " already exist");
                     }
                 });
             }
@@ -116,15 +117,14 @@ public class CategoryService {
         List<Category> rootCategories = categoryRepository.findRootCategories();
         rootCategories.forEach(r->{
             if (r.getName().equals(name)) {
-                System.out.println( name + " already a root category");
+                logger.info( name + " already a root category");
             }
         });
         List<Optional<Category>> subCategory = categoryRepository.findByParentId(id);
-        System.out.println(subCategory);
         if (!subCategory.isEmpty()) {
             subCategory.forEach(s->{
                 if (s.get().getName().equals(name)) {
-                    System.out.println(name + " already exist");
+                    logger.info(name + " already exist");
                 }
             });
         }
@@ -213,7 +213,6 @@ public class CategoryService {
         }
         List<FilterCategoryDTO> categoryDTOS = new ArrayList<>();
         List<Long> leafCategories = categoryRepository.getParentCategories();
-        System.out.println(leafCategories);
         if (leafCategories.contains(categoryId)) {
             // not a leaf category
             List<Optional<Category>> subCategory = categoryRepository.findByParentId(categoryId);

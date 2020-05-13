@@ -99,18 +99,4 @@ public class Address {
         this.user = user;
     }
 
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", country='" + country + '\'' +
-                ", zipCode=" + zipCode +
-                ", address='" + address + '\'' +
-                ", label='" + label + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }

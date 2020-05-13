@@ -2,10 +2,12 @@ package com.example.EcommerceApp.services;
 
 import com.example.EcommerceApp.entities.Image;
 import com.example.EcommerceApp.entities.Product;
+import com.example.EcommerceApp.entities.Product_Variation;
 import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.repositories.ImageRepository;
 import com.example.EcommerceApp.repositories.ProductRepository;
+import com.example.EcommerceApp.repositories.ProductVariationRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ public class ImageService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductVariationRepo productVariationRepo;
 
 
     public Optional<User> getLoggedInUser(Long id) {
@@ -67,6 +72,19 @@ public class ImageService {
 
         }else
             throw new NotFoundException("Product Not found");
+    }
+
+    public String saveProductVariationImage(Image image,Long vid){
+        Optional<Product_Variation> product_variation=productVariationRepo.findById(vid);
+        if (product_variation.isPresent()){
+            Product_Variation product_variation1=product_variation.get();
+            imageRepository.save(image);
+            product_variation1.setImageId(image.getId());
+            productVariationRepo.save(product_variation1);
+            return "Product Variation Image uploaded";
+        }
+        else
+            throw new NotFoundException("Product Variation Not found");
     }
 
     public Image downloadUserImage(Long fileId){
