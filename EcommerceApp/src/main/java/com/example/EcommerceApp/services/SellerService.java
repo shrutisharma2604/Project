@@ -2,6 +2,7 @@ package com.example.EcommerceApp.services;
 
 import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.AddressDTO;
+import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.dto.SellerProfileDTO;
 import com.example.EcommerceApp.entities.Address;
 import com.example.EcommerceApp.entities.Seller;
@@ -11,6 +12,8 @@ import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.SellerRepository;
 import com.example.EcommerceApp.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,31 +41,31 @@ public class SellerService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public SellerProfileDTO getSellerDetails(Long id){
+    Logger logger = LoggerFactory.getLogger(SellerService.class);
+    public SellerProfileDTO getSellerDetails(Long id) {
         Optional<Seller> seller = sellerRepository.findById(id);
 
-        if(seller.isPresent()){
-            SellerProfileDTO sellerProfileDto=new SellerProfileDTO();
-            BeanUtils.copyProperties(seller.get(),sellerProfileDto);
+        if (seller.isPresent()) {
+            SellerProfileDTO sellerProfileDto = new SellerProfileDTO();
+            BeanUtils.copyProperties(seller.get(), sellerProfileDto);
             return sellerProfileDto;
-        }
-        else {
+        } else {
             throw new UserNotFoundException("User Not Found");
         }
     }
+
     @Transactional
     @Modifying
-    public String updateSeller(SellerProfileDTO sellerProfileDto, Long id){
+    public String updateSeller(SellerProfileDTO sellerProfileDto, Long id) {
         Optional<Seller> seller = sellerRepository.findById(id);
-        if(seller.isPresent()) {
+        if (seller.isPresent()) {
             seller.get().setFirstName(sellerProfileDto.getFirstName());
             seller.get().setLastName(sellerProfileDto.getLastName());
             seller.get().setCompanyContact(sellerProfileDto.getCompanyContact());
-            seller.get().setImage(sellerProfileDto.getImage());
 
             sellerRepository.save(seller.get());
             return "Profile update Successfully";
-        }else {
+        } else {
             throw new UserNotFoundException("User not found");
         }
     }
@@ -93,6 +96,19 @@ public class SellerService {
             throw new UserNotFoundException("User not found");
         }
         return "Success";
+    }
+
+    public String addAddress(AddressDTO addressDto, Long id) {
+        Optional<Seller> seller = sellerRepository.findById(id);
+        if (seller.isPresent()) {
+                Address address = new Address();
+                address.setUser(seller.get());
+                BeanUtils.copyProperties(addressDto, address);
+                addressRepository.save(address);
+                return "Address added";
+        } else {
+                throw new UserNotFoundException("USer Not Found");
+        }
     }
 
     @Transactional

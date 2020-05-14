@@ -30,4 +30,15 @@ public class CartController {
 
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
+    @PostMapping("/add-to-wishlist/{vid}/{cid}")
+    public ResponseEntity<Object> addToWishlist(@PathVariable("vid") Long vid,@PathVariable("cid") Long cid) {
+
+        Optional<Customer> customer = customerRepository.findById(cid);
+        Long cusId=customer.get().getId();
+
+        String message = cartService.addToWishlist(cid, vid);
+
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+
 }

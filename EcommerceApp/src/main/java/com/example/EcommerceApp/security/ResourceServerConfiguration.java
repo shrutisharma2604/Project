@@ -61,6 +61,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/images/**").permitAll()
+                .antMatchers("/review/**").permitAll()
                 .antMatchers("/cart/**").permitAll()
                 .antMatchers("/order/**").permitAll()
                 .antMatchers("/product/variant/**").permitAll()

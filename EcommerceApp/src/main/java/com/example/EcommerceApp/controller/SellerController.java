@@ -49,6 +49,12 @@ public class SellerController {
             return "Password must be matched or password must be of minimum 8 characters and maximum 15 characters and must contain 1 uppercase letter,1 lowercase letter,1 digit and 1 special character";
         }
     }
+
+    @PostMapping(path = "/{id}/address")
+    public String addAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "id") Long id){
+        return sellerService.addAddress(addressDto,id);
+    }
+
     @PutMapping(path = "/{userId}/address/{addressId}")
     public String updateAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "addressId") Long addressId, @PathVariable Long userId) {
         return sellerService.updateAddress(addressDto, addressId, userId);

@@ -24,7 +24,6 @@ public class RegisterService {
 
     @Autowired
     private UserRepository userRepository;
-    ;
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -160,10 +159,6 @@ public class RegisterService {
         seller.setActive(true);
         seller.setLocked(false);
         seller.setExpired(false);
-
-        Address address=new Address();
-        address.setUser(seller);
-        addressRepository.save(address);
 
         CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());

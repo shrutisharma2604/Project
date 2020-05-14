@@ -15,7 +15,6 @@ public class Seller extends User{
     private String companyName;
     @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Product> products;
-    private String image;
 
     public String getGST() {
         return GST;
@@ -47,14 +46,6 @@ public class Seller extends User{
 
     public void setProducts(Set<Product> products) {
         this.products = products;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
 

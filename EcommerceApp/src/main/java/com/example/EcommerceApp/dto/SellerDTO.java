@@ -7,6 +7,11 @@ import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 public class SellerDTO {
+    @NotEmpty(message = "first name must be entered")
+    private String firstName;
+
+    private String lastName;
+
     @Email(message = "Please provide a valid e-mail")
     @NotEmpty(message = "Please provide an e-mail")
     private String email;
@@ -93,10 +98,28 @@ public class SellerDTO {
         this.addresses = addresses;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
         return "SellerDTO{" +
-                "email='" + email + '\'' +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", GST='" + GST + '\'' +

@@ -1,9 +1,6 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.entities.Image;
-import com.example.EcommerceApp.entities.Product;
-import com.example.EcommerceApp.entities.Product_Variation;
-import com.example.EcommerceApp.entities.User;
+import com.example.EcommerceApp.entities.*;
 import com.example.EcommerceApp.exception.BadRequestException;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.repositories.ImageRepository;
@@ -29,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/image")
@@ -96,6 +94,21 @@ public class ImageController {
         }
     }
 
+    @GetMapping(path = "/downloadFile/{id}")
+    public ResponseEntity<Resource> downloadUserImage(@PathVariable Long id) {
+        // Load file from database
+        Optional<User> user=userRepository.findById(id);
+        Long imageId=user.get().getImageId();
+        Image image = imageService.downloadImage(imageId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                .body(new ByteArrayResource(image.getData()));
+    }
+
+    //upload product image
+
     @PostMapping(path = "/uploadProductImage/{id}/{pid}")
     public ResponseEntity<Object> uploadProductImage(@RequestParam("file") MultipartFile file,
                                                      @PathVariable("pid") Long pid,@PathVariable("id") Long id ) throws IOException {
@@ -131,6 +144,7 @@ public class ImageController {
                         image.setPath(path.toString());
                         image.setCreatedOn(new Date());
                         image.setUserId(sellerId);
+                        image.setStatus(true);
 
                         String message = imageService.saveProductImage(image, pid);
 
@@ -153,19 +167,66 @@ public class ImageController {
             throw new NotFoundException("Product not found with requested ID");
         }
     }
+    // download product image
 
-    @GetMapping(path = "/downloadFile/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+    @GetMapping(path = "/downloadFile/{pid}/{id}")
+    public ResponseEntity<Resource> downloadProductImage(@PathVariable Long pid,@PathVariable("id") Long id) {
         // Load file from database
-        Image image = imageService.downloadUserImage(fileId);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(image.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-                .body(new ByteArrayResource(image.getData()));
+        Optional<Product> optionalProduct = productRepository.findById(pid);
+        if(optionalProduct.isPresent()) {
+
+            Product product = optionalProduct.get();
+            if (product.isActive() && !product.isDeleted()) {
+
+                Long imageId = product.getImageId();
+                if (imageId==null){
+                    throw new NotFoundException("Image Not found for the requested product");
+                }
+
+                Long sellerId = product.getSeller().getId();
+
+                Optional<User> user = imageService.getLoggedInUser(id);
+                Long sid = user.get().getId();
+                Set<Role> role = user.get().getRoles();
+
+                if (role.equals("ROLE_SELLER"))
+                {
+                    if (sid.equals(sellerId)) {
+
+                        // Load file from database
+                        Image image = imageService.downloadImage(imageId);
+
+                        return ResponseEntity.ok()
+                                .contentType(MediaType.parseMediaType(image.getFileType()))
+                                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                                .body(new ByteArrayResource(image.getData()));
+
+                    }
+                    else {
+                        throw new BadRequestException("You are not authorized to view this Product");
+                    }
+                } else {
+
+                    // Load file from database
+                    Image imageDocument = imageService.downloadImage(imageId);
+
+                    return ResponseEntity.ok()
+                            .contentType(MediaType.parseMediaType(imageDocument.getFileType()))
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + imageDocument.getFileName() + "\"")
+                            .body(new ByteArrayResource(imageDocument.getData()));
+
+                }
+
+            } else {
+                throw new NotFoundException("Product is unavailable at the moment");
+            }
+        } else {
+            throw new NotFoundException("Invalid Product ID");
+        }
     }
 
-
+    //upload product variation image
     @PostMapping("/product/variation/uploadImage/{vid}/{id}")
     public ResponseEntity<Object> uploadProductVariationImage(@RequestParam("file") MultipartFile file,
                                                               @PathVariable Long vid,@PathVariable("id") Long id) throws IOException {
@@ -199,16 +260,16 @@ public class ImageController {
                         if (fileExtension.equals("jpeg") || fileExtension.equals("jpg")
                                 || fileExtension.equals("png") || fileExtension.equals("bmp")) {
 
-                            File newPath = new File(UPLOAD_FOLDER + pid + "/variations");
-                            if (!newPath.exists()) {
-                                if (newPath.mkdir()) {
+                            File newFile = new File(UPLOAD_FOLDER + pid + "/variations");
+                            if (!newFile.exists()) {
+                                if (newFile.mkdirs()) {
                                     logger.info("New Directory Created");
                                 } else {
                                     logger.error("Failed to create a new directory");
                                 }
                             }
 
-                            Path path = Paths.get(newPath.toString() + "/" + vid + "." + fileExtension);
+                            Path path = Paths.get(newFile.toString() + "/" + vid + "." + fileExtension);
                             Files.write(path, bytes);
 
 
@@ -216,6 +277,7 @@ public class ImageController {
                             image.setFileName(pid.toString() + "." + fileExtension);
                             image.setPath(path.toString());
                             image.setCreatedOn(new Date());
+                            image.setStatus(true);
                             image.setUserId(sellerId);
 
                             String message = imageService.saveProductVariationImage(image, vid);
@@ -241,5 +303,66 @@ public class ImageController {
         } else {
             throw new NotFoundException("Invalid id");
         }
+    }
+
+
+    // download product variation image
+    @GetMapping("/download/product/variation/image/{vid}/{id}")
+    public ResponseEntity<Resource> downloadProductVariationImage(@PathVariable Long vid,@PathVariable("id") Long id) {
+
+    Optional<Product_Variation> product_variation = productVariationRepo.findById(vid);
+
+    if (product_variation.isPresent()) {
+
+        Product_Variation productVariation = product_variation.get();
+
+        if (productVariation.isActive()) {
+
+            Long imageId = productVariation.getImageId();
+            if (imageId == null) {
+                throw new NotFoundException("Image Not found for the requested Product-Variation");
+            }
+
+            Long sellerId = productVariation.getProduct().getSeller().getId();
+
+            Optional<User> user = imageService.getLoggedInUser(id);
+            Long sid = user.get().getId();
+            Set<Role> role = user.get().getRoles();
+
+            if (role.equals("ROLE_SELLER"))
+            {
+                if (sid.equals(sellerId)) {
+
+                    // Load file from database
+                    Image image = imageService.downloadImage(imageId);
+
+                    return ResponseEntity.ok()
+                            .contentType(MediaType.parseMediaType(image.getFileType()))
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                            .body(new ByteArrayResource(image.getData()));
+
+                }
+                else {
+                    throw new BadRequestException("You are not authorized to view this Product Variation");
+                }
+            } else {
+
+                // Load file from database
+                Image image = imageService.downloadImage(imageId);
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(image.getFileType()))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                        .body(new ByteArrayResource(image.getData()));
+
+            }
+
+        } else {
+            throw new NotFoundException("Product-Variation is unavailable at the moment");
+        }
+
+    } else {
+        throw new NotFoundException("Invalid Product-Variation Id");
+    }
     }
 }

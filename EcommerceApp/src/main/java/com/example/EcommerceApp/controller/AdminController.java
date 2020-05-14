@@ -184,4 +184,20 @@ public class AdminController {
         return getMessage;
     }
 
+    // unlock user account
+    @PutMapping(path = "/unlock-account")
+    public String unlockAccount(@RequestParam("email") String email, HttpServletResponse httpServletResponse){
+        String message = adminService.unlockUser(email);
+        if(!message.equals("Mail sent to locked user")){
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return message;
+    }
+    @GetMapping("/do-unlock")
+    public String unlockAccountSuccess(@RequestParam("email") String email)
+    {
+        String message = adminService.unlockSuccessMessage(email);
+        return message;
+    }
+
 }

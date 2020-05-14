@@ -20,7 +20,7 @@ public class OrderStatus {
     private String transitionNotesComments;
 
     @ManyToOne
-    @JoinColumn(name = "order_product_id")
+    @JoinColumn(name = "orderProduct_id")
     private OrderProduct orderProduct;
 
     public Long getId() {

@@ -4,13 +4,13 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.AddressDTO;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.CustomerProfileDTO;
-import com.example.EcommerceApp.entities.Address;
-import com.example.EcommerceApp.entities.Customer;
-import com.example.EcommerceApp.entities.User;
+import com.example.EcommerceApp.dto.ReviewDTO;
+import com.example.EcommerceApp.entities.*;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.CustomerRepository;
+import com.example.EcommerceApp.repositories.ReviewRepository;
 import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
@@ -47,6 +47,9 @@ public class CustomerService {
 
   @Autowired
    private EmailNotificationService emailNotificationService;
+
+  @Autowired
+  private ReviewRepository reviewRepository;
 
   @Autowired
   private UserRepository userRepository;
@@ -171,6 +174,16 @@ public class CustomerService {
             }
         } else {
             throw new NotFoundException("User not found");
+        }
+    }
+    public ReviewDTO viewProductReview(Long reviewId) {
+        Optional<ProductReview> productReview = reviewRepository.findById(reviewId);
+        if (productReview.isPresent()) {
+            ReviewDTO reviewDTO = new ReviewDTO();
+            BeanUtils.copyProperties(productReview.get(), reviewDTO);
+            return reviewDTO;
+        } else {
+            throw new NotFoundException("There is no review present");
         }
     }
 }

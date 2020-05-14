@@ -87,8 +87,10 @@ public class ImageService {
             throw new NotFoundException("Product Variation Not found");
     }
 
-    public Image downloadUserImage(Long fileId){
+    public Image downloadImage(Long fileId) {
         return imageRepository.findById(fileId)
-                .orElseThrow(() -> new NotFoundException("File not found with id " + fileId));
+                .orElseThrow(() -> new NotFoundException("File not found with image id " + fileId));
+
     }
+
 }

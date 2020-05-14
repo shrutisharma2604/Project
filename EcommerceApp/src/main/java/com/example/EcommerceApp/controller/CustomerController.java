@@ -1,9 +1,6 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.dto.AddressDTO;
-import com.example.EcommerceApp.dto.AllProductDTO;
-import com.example.EcommerceApp.dto.CustomerProfileDTO;
-import com.example.EcommerceApp.dto.ProductVariationGetDTO;
+import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.Product;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.CustomerService;
@@ -97,6 +94,12 @@ public class CustomerController {
     @GetMapping("/filterCategories/{categoryId}")
     public List<?> filterCategory(@PathVariable Long categoryId) {
         return categoryService.filterCategory(categoryId);
+    }
+
+    //view review
+    @GetMapping(path = "/getCustomerDetails/{reviewId}")
+    public ReviewDTO view(@PathVariable("reviewId") Long reviewId){
+        return customerService.viewProductReview(reviewId);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.EcommerceApp.entities;
 
-import net.minidev.json.annotate.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -23,6 +22,7 @@ public class Orders {
    @Embedded
    private OrderAddress orderAddress;
 
+   @JsonIgnore
    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
    private Set<OrderProduct> items;
 

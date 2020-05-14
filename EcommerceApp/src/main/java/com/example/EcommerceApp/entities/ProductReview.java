@@ -1,5 +1,7 @@
 package com.example.EcommerceApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,12 +10,14 @@ public class ProductReview {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String review;
-    private Double rating;
+    private Integer rating;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "customer_user_id")
     private Customer customer;
@@ -37,11 +41,11 @@ public class ProductReview {
         this.review = review;
     }
 
-    public Double getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
