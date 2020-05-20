@@ -14,5 +14,5 @@ public interface SellerRepository extends CrudRepository<Seller,Long> {
 
     List<Seller> findByGST(String gst);
 
-    Seller findByEmail(String email);
+    //Seller findByEmail(String email);
 }

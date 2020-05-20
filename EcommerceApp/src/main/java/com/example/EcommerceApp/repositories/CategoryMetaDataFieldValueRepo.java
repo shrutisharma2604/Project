@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryMetaDataFieldValueRepo extends CrudRepository<CategoryMetaDataFieldValue,Long> {
-    @Query(value = "select * from category_metadata_field_values where category_id=:cId AND category_metadata_field_id=:mId",nativeQuery = true)
-    Optional<CategoryMetaDataFieldValue> findByMetadataId(@Param("cId") Long cId, @Param("mId") Long mId);
 
-    @Query(value = "select category_metadata_field.name,category_metadata_field_values.value from category_metadata_field_values inner join category_metadata_field on category_metadata_field_values.category_metadata_field_id = category_metadata_field.id AND category_metadata_field_values.category_id=:id",nativeQuery = true)
+    @Query(value = "select CategoryMetaDataField.name,CategoryMetaDataFieldValue.value from CategoryMetaDataFieldValue inner join CategoryMetaDataField on CategoryMetaDataFieldValue.category_metadata_field_id = CategoryMetaDataField.id AND CategoryMetaDataFieldValue.category_id=:id",nativeQuery = true)
     List<Object[]> findCategoryMetadataFieldValuesById(@Param("id") Long id);
 }

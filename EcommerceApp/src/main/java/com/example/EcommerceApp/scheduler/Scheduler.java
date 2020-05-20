@@ -17,7 +17,7 @@ public class Scheduler {
     @Autowired
     private EmailService emailService;
 
-    @Scheduled(cron = "30 12 18 * * *",zone = "Indian/Maldives")
+    @Scheduled(cron = "30 8 13 * * *")
     public void run(){
         emailService.saveEmailReport();
         productVariantService.autoUpdateVariationQuantity();

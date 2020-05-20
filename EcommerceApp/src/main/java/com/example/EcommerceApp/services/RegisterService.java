@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -27,9 +28,6 @@ public class RegisterService {
 
     @Autowired
     private SellerRepository sellerRepository;
-
-    @Autowired
-    private AdminRepository adminRepository;
 
     @Autowired
     private EmailNotificationService emailNotificationService;
@@ -159,6 +157,10 @@ public class RegisterService {
         seller.setActive(true);
         seller.setLocked(false);
         seller.setExpired(false);
+        seller.setAddresses(sellerDto.getAddresses());
+        Address address=new Address();
+        address.setUser(seller);
+        addressRepository.save(address);
 
         CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());

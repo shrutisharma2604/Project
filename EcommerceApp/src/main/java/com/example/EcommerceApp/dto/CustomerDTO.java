@@ -28,7 +28,7 @@ public class CustomerDTO {
     private String firstName;
     @NotEmpty(message = "Please provide your last name")
     private String lastName;
-    private Set<Address> addresses;
+
 
     public String getEmail() {
         return email;
@@ -78,13 +78,6 @@ public class CustomerDTO {
         this.lastName = lastName;
     }
 
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
-    }
 
     @Override
     public String toString() {
@@ -95,7 +88,6 @@ public class CustomerDTO {
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", addresses=" + addresses +
                 '}';
     }
 }

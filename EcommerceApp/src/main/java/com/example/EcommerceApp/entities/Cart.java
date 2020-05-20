@@ -1,6 +1,8 @@
 package com.example.EcommerceApp.entities;
 
-import net.minidev.json.annotate.JsonIgnore;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 

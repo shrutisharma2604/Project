@@ -15,7 +15,7 @@ import javax.validation.Valid;
 public class RegistrationController {
 
     @Autowired
-    private EmailNotificationService emailNotificationService;
+    EmailNotificationService emailNotificationService;
     @Autowired
     private RegisterService registerService;
     @Autowired
