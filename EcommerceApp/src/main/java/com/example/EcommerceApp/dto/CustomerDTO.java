@@ -1,14 +1,15 @@
 package com.example.EcommerceApp.dto;
 
 import com.example.EcommerceApp.entities.Address;
-import org.codehaus.jackson.map.annotate.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.Set;
-
-@JsonFilter("CustomerDTO-Filter")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFilter("CustomerDTOFilter")
 public class CustomerDTO {
     @Email
     @NotEmpty(message = "Please provide valid email")
@@ -29,6 +30,7 @@ public class CustomerDTO {
     @NotEmpty(message = "Please provide your last name")
     private String lastName;
 
+    private Set<Address> addresses;
 
     public String getEmail() {
         return email;
@@ -78,6 +80,13 @@ public class CustomerDTO {
         this.lastName = lastName;
     }
 
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
+    }
 
     @Override
     public String toString() {
@@ -88,6 +97,7 @@ public class CustomerDTO {
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", addresses=" + addresses +
                 '}';
     }
 }

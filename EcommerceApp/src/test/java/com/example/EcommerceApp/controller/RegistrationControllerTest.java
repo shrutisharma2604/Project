@@ -11,9 +11,9 @@ import com.example.EcommerceApp.services.RegisterService;
 import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +21,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import javax.servlet.http.HttpServletResponse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {RegistrationController.class, RegisterService.class, CustomerActivateService.class, EmailNotificationService.class, JavaMailSenderImpl.class, JwtAccessTokenConverter.class, ResourceBundleMessageSource.class})
 @WebMvcTest(RegistrationController.class)
@@ -80,17 +86,44 @@ class RegistrationControllerTest  {
         customerDTO.setFirstName("Shruti");
         customerDTO.setLastName("Sharma");
         customerDTO.setContact("9870737979");
-        customerDTO.setEmail("shruti.1720mca1091@kiet.edu");
+        customerDTO.setEmail("madhurisharma242@gmail.com");
         customerDTO.setPassword("Shruti@26");
         customerDTO.setConfirmPassword("Shruti@26");
-        when(registerService.registerCustomer(any(CustomerDTO.class))).thenReturn("Registered Successfully");
-        mockMvc.perform(post("/register/customer")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+        HttpServletResponse response = mock(HttpServletResponse.class);
+       /* when(registerService.registerCustomer(any(CustomerDTO.class))).thenReturn("Registered Successfully");
+        ResultActions resultActions=mockMvc.perform(post("/register/customer")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(customerDTO))
-        )
+        );*/
+        String jsonString = new JSONObject()
+                .put("confirmPassword", "Shruti@26")
+                .put("contact", "9870737979")
+                .put("email", "madhurisharma242@gmail.com")
+                .put("firstName", "Shruti")
+                .put("lastName", "Sharma")
+                .put("password", "Shruti@26")
+                .toString();
+        RequestBuilder requestBuilder =  MockMvcRequestBuilders
+                .post("/register/customer" )
+                .content(jsonString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        ResultActions resultAction =  mockMvc.perform(requestBuilder);
+        MvcResult result = resultAction
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.confirmPassword", is("Shruti@26")))
+                .andReturn();
+        String expected = "Registered Successfully";
+
+
+        //When
+        String actual = registerService.registerCustomer(customerDTO);
+
+        //Then
+        assertEquals(expected,actual,"Customer Added");
+
+             /* //  .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               // .andExpect(jsonPath("$.confirmPassword", is("Shruti@26")))
                 .andExpect(jsonPath("$.contact", is("9870737979")))
                 .andExpect(jsonPath("$.email", is("shruti.1720mca1091@kiet.edu")))
                 .andExpect(jsonPath("$.firstName", is("Shruti")))
@@ -108,7 +141,7 @@ class RegistrationControllerTest  {
         assertThat(customerDTO1.getEmail(),is("shruti.1720mca1091@kiet.edu"));
         assertThat(customerDTO1.getFirstName(),is("Shruti"));
         assertThat(customerDTO1.getLastName(),is("Sharma"));
-        assertThat(customerDTO1.getPassword(),is("Shruti@26"));
+        assertThat(customerDTO1.getPassword(),is("Shruti@26"));*/
     }
 
 }

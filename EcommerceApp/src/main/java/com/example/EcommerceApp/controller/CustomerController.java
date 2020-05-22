@@ -7,6 +7,8 @@ import com.example.EcommerceApp.services.CustomerService;
 import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,9 @@ public class CustomerController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping(path = "/getCustomerDetails/{id}")
     public CustomerProfileDTO getCustomerProfile(@PathVariable("id") Long id){
@@ -102,4 +107,8 @@ public class CustomerController {
         return customerService.viewProductReview(reviewId);
     }
 
+    @GetMapping(path = "/hello-world-internationalization")
+    public String customerHome(){
+        return messageSource.getMessage("good.morning.messages",null, LocaleContextHolder.getLocale());
+    }
 }

@@ -6,6 +6,7 @@ import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
 import com.example.EcommerceApp.repositories.*;
+import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -43,6 +43,9 @@ public class RegisterService {
     GstValidation gstValidation;
 
     @Autowired
+    EmailValidation emailValidation;
+
+    @Autowired
     private AddressRepository addressRepository;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(EcommerceAppApplication.class);
@@ -50,19 +53,20 @@ public class RegisterService {
     public String registerCustomer(CustomerDTO customerDto) {
 
         User user = userRepository.findByEmail(customerDto.getEmail());
-        try {
-            if (user.getEmail().equals(customerDto.getEmail())) {
-                LOGGER.error("Email already exists");
-            }
-            if (customerDto.getPassword().equals(customerDto.getConfirmPassword())) {
-                LOGGER.error("Password does not match");
-            }
-        } catch (NullPointerException ex) {
-
+        if(!emailValidation.validateEmail(customerDto.getEmail())){
+            LOGGER.error("Invalid email");
         }
-        boolean isValidPassword = passwordValidation.isValid(customerDto.getPassword());
-        if (!isValidPassword) {
-            LOGGER.error("password is invalid");
+        if (userRepository.findByEmail(customerDto.getEmail())!=null) {
+                LOGGER.error("Email already exists");
+        }
+        if (customerDto.getContact().length() != 10) {
+            LOGGER.error("contact is invalid");
+        }
+        if (!passwordValidation.isValid(customerDto.getPassword())) {
+                LOGGER.error("Password is invalid");
+        }
+        if (!customerDto.getPassword().equals(customerDto.getConfirmPassword())) {
+            return "Password does not match";
         }
         customerDto.setPassword(passwordEncoder.encode(customerDto.getPassword()));
 
@@ -97,56 +101,34 @@ public class RegisterService {
 
     @Transactional
     public String registerSeller(SellerDTO sellerDto) {
-        boolean isValidGst = gstValidation.validateGst(sellerDto.getGST());
-        if (!isValidGst) {
-            return "gst is not valid";
+        if (!gstValidation.validateGst(sellerDto.getGST())) {
+            LOGGER.error("gst is invalid");
         }
-        User user = userRepository.findByEmail(sellerDto.getEmail());
-        try {
-            if (user.getEmail().equals(sellerDto.getEmail())) {
-                return "Email already exists";
-            }
-            if (sellerDto.getPassword().equals(sellerDto.getConfirmPassword())) {
-                return "Password does not match";
-            }
-        } catch (NullPointerException ex) {
-
+        if (!emailValidation.validateEmail(sellerDto.getEmail())) {
+           LOGGER.error("email is invalid");
         }
-        Seller user1 = sellerRepository.findByCompanyName(sellerDto.getCompanyName());
-        try {
-            if (user1.getCompanyName().equalsIgnoreCase(sellerDto.getCompanyName())) {
-                return "company name should be unique";
-            }
-        } catch (NullPointerException ex) {
-
+        if (userRepository.findByEmail(sellerDto.getEmail()) != null) {
+            LOGGER.error("email already exist");
         }
-        List<Seller> user2 = sellerRepository.findByGST(sellerDto.getGST());
-        boolean flag = false;
-        for (Seller seller1 : user2) {
-            if (seller1.getGST().equals(sellerDto.getGST())) {
-                flag = true;
-                break;
-            }
+        if (sellerRepository.findByCompanyName(sellerDto.getCompanyName()) != null) {
+            LOGGER.error("company name should be unique");
         }
-        try {
-            if (flag == true) {
-                return "gst should be unique";
-            }
-        } catch (NullPointerException ex) {
-
+        if (sellerRepository.findByGST(sellerDto.getGST()) != null) {
+            LOGGER.error("gst should be unique");
         }
-        boolean isValidPassword = passwordValidation.isValid(sellerDto.getPassword());
-        if (!isValidPassword) {
-            return "password is invalid";
+        if (!passwordValidation.isValid(sellerDto.getPassword())) {
+            LOGGER.error("password in invalid");
         }
-        sellerDto.setPassword(passwordEncoder.encode(sellerDto.getPassword()));
         if (sellerDto.getCompanyContact().length() != 10) {
-            return "invalid contact";
+            LOGGER.error("contact is invalid");
         }
         if(sellerDto.getAddresses().size() != 1) {
             return "Seller does not have multiple addresses";
         }
-
+        if (!sellerDto.getPassword().equals(sellerDto.getConfirmPassword())) {
+            return "Password does not match";
+        }
+        sellerDto.setPassword(passwordEncoder.encode(sellerDto.getPassword()));
         Seller seller = new Seller();
         BeanUtils.copyProperties(sellerDto, seller);
         Role role = new Role();
@@ -158,9 +140,14 @@ public class RegisterService {
         seller.setLocked(false);
         seller.setExpired(false);
         seller.setAddresses(sellerDto.getAddresses());
-        Address address=new Address();
+       /* Address address=new Address();
         address.setUser(seller);
-        addressRepository.save(address);
+        addressRepository.save(address);*/
+        Set<Address> addresses = seller.getAddresses();
+        addresses.forEach(address -> {
+            Address addressSave = address;
+            addressSave.setUser(seller);
+        });
 
         CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());

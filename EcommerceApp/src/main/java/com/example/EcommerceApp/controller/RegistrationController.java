@@ -23,7 +23,7 @@ public class RegistrationController {
 
     @PostMapping(path = "/customer")
     public String registerCustomer(@Valid @RequestBody CustomerDTO customerDto, HttpServletResponse httpServletResponse){
-      String message=registerService.registerCustomer(customerDto);
+       String message=registerService.registerCustomer(customerDto);
         System.out.println(message + "Customer");
         // content equals
         if ("Registered Successfully".equals(message)) {
@@ -32,6 +32,8 @@ public class RegistrationController {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return message;
+        /*httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
+        return registerService.registerCustomer(customerDto);*/
     }
 
     @PostMapping(path = "/seller")

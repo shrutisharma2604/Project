@@ -8,6 +8,8 @@ import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.services.SellerService;
 import com.example.EcommerceApp.validation.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +32,9 @@ public class SellerController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping(path = "/getSellerDetails/{id}")
     public SellerProfileDTO getSellerProfile(@PathVariable("id") Long id){
@@ -117,4 +122,8 @@ public class SellerController {
         return categoryService.viewCategoriesSameParent(categoryId);
     }
 
+    @GetMapping(path = "/hello-world-internationalization")
+    public String sellerHome(){
+        return messageSource.getMessage("good.morning.messages",null, LocaleContextHolder.getLocale());
+    }
 }

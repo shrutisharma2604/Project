@@ -102,7 +102,7 @@ public class AdminController {
     }
 
     @GetMapping(path = "/hello-world-internationalization")
-    public String helloWorldInternationalization(){
+    public String adminHome(){
         return messageSource.getMessage("good.morning.messages",null, LocaleContextHolder.getLocale());
     }
 

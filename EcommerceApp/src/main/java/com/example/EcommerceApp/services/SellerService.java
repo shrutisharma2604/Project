@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Service
@@ -100,6 +101,16 @@ public class SellerService {
 
     public String addAddress(AddressDTO addressDto, Long id) {
         Optional<Seller> seller = sellerRepository.findById(id);
+        //Optional<Address> addressOptional=addressRepository.findById(id);
+      /*  Iterable<Address> addresses = addressRepository.findAll();
+        Iterator<Address> addressIterator = addresses.iterator();
+        while (addressIterator.hasNext()) {
+            Address address = addressIterator.next();
+            if(address.getUser().equals(seller.get().getId())){
+                logger.error("Seller can not have multiple address");
+            }
+
+        }*/
         if (seller.isPresent()) {
                 Address address = new Address();
                 address.setUser(seller.get());

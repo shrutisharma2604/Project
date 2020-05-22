@@ -72,10 +72,10 @@ public class CustomerService {
             BeanUtils.copyProperties(customer.get(), customerDto);
 
             SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
-            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("CustomerDTO-Filter", filter);
+            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("CustomerDTOFilter", filter);
 
             MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(customerDto);
-
+            mappingJacksonValue.setFilters(filterProvider);
             return mappingJacksonValue;
         }
         else {
