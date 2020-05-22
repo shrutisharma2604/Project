@@ -33,6 +33,11 @@ public class ForgotPasswordService {
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    /**
+     * This method is used to generate forgot password token
+     * @param email
+     * @return
+     */
     public String sendToken(String email) {
         boolean isValidEmail = emailValidation.validateEmail(email);
         if (!isValidEmail) {
@@ -41,6 +46,7 @@ public class ForgotPasswordService {
         User user = userRepository.findByEmail(email);
         try {
             if (user.getEmail().equals(null)) {
+                return "success";
             }
         } catch (NullPointerException ex) {
             return "no email found";
@@ -60,6 +66,14 @@ public class ForgotPasswordService {
         return "Success";
     }
 
+    /**
+     * This method is used to reset the password
+     * @param email
+     * @param token
+     * @param pass
+     * @param cpass
+     * @return
+     */
     @Transactional
     public String resetPassword(String email, String token, String pass, String cpass) {
         if (!pass.equals(cpass)) {
@@ -71,6 +85,7 @@ public class ForgotPasswordService {
         ForgotPasswordToken forgotPasswordToken = passwordRepo.findByUserEmail(email);
         try {
             if (forgotPasswordToken.getUserEmail().equals(null)) {
+                return "success";
             }
         } catch (NullPointerException ex) {
             return "no email found";

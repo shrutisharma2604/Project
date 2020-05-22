@@ -44,6 +44,13 @@ public class AdminService {
     private CustomerActivateService customerActivateService;
 
     Logger logger = LoggerFactory.getLogger(AdminService.class);
+
+    /**
+     * This method is used to activate the customer
+     * @param id
+     * @param httpServletResponse
+     * @return
+     */
     public String activateCustomer(@PathVariable Long id, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
@@ -62,6 +69,13 @@ public class AdminService {
         return "Success";
     }
 
+    /**
+     * This method is used to deactivate the customer
+     * @param id
+     * @param httpServletResponse
+     * @return
+     */
+
     public String deactivateCustomer(@PathVariable Long id, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
@@ -79,7 +93,12 @@ public class AdminService {
         logger.info("already deactivated");
         return "Success";
     }
-
+    /**
+     * This method is used to activate the seller
+     * @param id
+     * @param httpServletResponse
+     * @return
+     */
     public String activateSeller(@PathVariable Long id, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
@@ -98,6 +117,13 @@ public class AdminService {
         return "Success";
     }
 
+    /**
+     * This method is used to deactivate the seller
+     * @param id
+     * @param httpServletResponse
+     * @return
+     */
+
     public String deactivateSeller(@PathVariable Long id, HttpServletResponse httpServletResponse) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
@@ -115,6 +141,12 @@ public class AdminService {
         logger.info("already deactivated");
         return "Success";
     }
+
+    /**
+     * This method is used to unlock all the user
+     * @param email
+     * @return
+     */
     public String unlockUser(String email){
         User user=userRepository.findByEmail(email);
         if(user==null){
@@ -124,6 +156,12 @@ public class AdminService {
         logger.info("mail send to all the registered user");
         return "Mail sent to locked user";
     }
+
+    /**
+     * This method is used to send the success message to the user through email
+     * @param email
+     * @return
+     */
 
     @Transactional
     @Modifying
@@ -137,6 +175,14 @@ public class AdminService {
         return "Account Unlocked Successfully";
     }
 
+    /**
+     * This method is used to get the information of all the customers
+     * @param page
+     * @param size
+     * @param SortBy
+     * @return
+     */
+
     public MappingJacksonValue registeredCustomers(String page,String size, String SortBy){
         List<Customer> customers = customerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
         SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","active");
@@ -147,6 +193,14 @@ public class AdminService {
         message.setFilters(filterProvider);
         return message;
     }
+
+    /**
+     * This method is used to get the information of all the sellers
+     * @param page
+     * @param size
+     * @param SortBy
+     * @return
+     */
 
     public MappingJacksonValue registeredSellers(String page,String size, String SortBy){
         List<Seller> sellers = sellerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();

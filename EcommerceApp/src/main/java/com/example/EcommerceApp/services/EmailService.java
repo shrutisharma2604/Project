@@ -25,6 +25,9 @@ public class EmailService {
 
     Logger logger = LoggerFactory.getLogger(EmailService.class);
 
+    /**
+     * This method is used to store email details of seller in mongodb
+     */
     public void saveEmailReport() {
 
         Iterable<Seller> sellers = sellerRepository.findAll();

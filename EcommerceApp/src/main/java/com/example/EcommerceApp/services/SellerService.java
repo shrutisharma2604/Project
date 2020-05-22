@@ -43,6 +43,12 @@ public class SellerService {
     PasswordEncoder passwordEncoder;
 
     Logger logger = LoggerFactory.getLogger(SellerService.class);
+
+    /**
+     * This method is used to get the details of particular seller
+     * @param id
+     * @return
+     */
     public SellerProfileDTO getSellerDetails(Long id) {
         Optional<Seller> seller = sellerRepository.findById(id);
 
@@ -55,6 +61,12 @@ public class SellerService {
         }
     }
 
+    /**
+     * This method is used to update the details of seller
+     * @param sellerProfileDto
+     * @param id
+     * @return
+     */
     @Transactional
     @Modifying
     public String updateSeller(SellerProfileDTO sellerProfileDto, Long id) {
@@ -71,6 +83,15 @@ public class SellerService {
         }
     }
 
+    /**
+     * This method is used to update the password of particular seller
+     * @param id
+     * @param oldPass
+     * @param newPass
+     * @param confirmPass
+     * @param httpServletResponse
+     * @return
+     */
     @Transactional
     @Modifying
     public String updatePassword(Long id, String oldPass, String newPass, String confirmPass, HttpServletResponse httpServletResponse) {
@@ -99,6 +120,12 @@ public class SellerService {
         return "Success";
     }
 
+    /**
+     * This method is used to add the address for particular seller
+     * @param addressDto
+     * @param id
+     * @return
+     */
     public String addAddress(AddressDTO addressDto, Long id) {
         Optional<Seller> seller = sellerRepository.findById(id);
         //Optional<Address> addressOptional=addressRepository.findById(id);
@@ -122,6 +149,13 @@ public class SellerService {
         }
     }
 
+    /**
+     * This method is used to update the address for particular seller
+     * @param addressDto
+     * @param id
+     * @param userId
+     * @return
+     */
     @Transactional
     @Modifying
     public String updateAddress(AddressDTO addressDto, Long id,Long userId) {

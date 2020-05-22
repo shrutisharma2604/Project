@@ -11,6 +11,12 @@ public class EmailNotificationService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    /**
+     * This method is used to send the email service
+     * @param subject
+     * @param text
+     * @param sendTo
+     */
     @Async
     public void sendNotification(String subject,String text,String sendTo){
         SimpleMailMessage mail=new SimpleMailMessage();

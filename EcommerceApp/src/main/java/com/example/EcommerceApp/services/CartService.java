@@ -32,6 +32,14 @@ public class CartService {
     private WishlistRepository wishlistRepository;
 
     Logger logger = LoggerFactory.getLogger(CartService.class);
+
+    /**
+     * This method is used to add the product in the cart
+     * @param cart
+     * @param cid
+     * @param vid
+     * @return
+     */
     public String addToCart(Cart cart, Long cid, Long vid) {
 
         Optional<User> customer = userRepository.findById(cid);
@@ -110,6 +118,12 @@ public class CartService {
         }
     }
 
+    /**
+     * This product is used to add the product in the wishlist
+     * @param cid
+     * @param vid
+     * @return
+     */
     public String addToWishlist (Long cid, Long vid) {
 
         Optional<User> customer = userRepository.findById(cid);

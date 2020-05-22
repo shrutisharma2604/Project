@@ -37,6 +37,14 @@ public class ProductService {
     private ProductVariantRepo productVariantRepo;
 
     Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+    /**
+     * This method is used to add the product
+     * @param sellerId
+     * @param categoryId
+     * @param productDto
+     * @return
+     */
    public String addProduct(Long sellerId, Long categoryId, ProductDTO productDto)  {
 
         Optional<Category> category = categoryRepository.findById(categoryId);
@@ -72,6 +80,12 @@ public class ProductService {
         }
     }
 
+    /**
+     * This method is used to add the product variations
+     * @param productId
+     * @param productVariationDto
+     * @return
+     */
     public String addProductVariation(Long productId, ProductVariationDTO productVariationDto)  {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isPresent()) {
@@ -106,6 +120,12 @@ public class ProductService {
         return "Variation saved";
     }
 
+    /**
+     * This method is used to get the product of a particular seller
+     * @param userId
+     * @param productId
+     * @return
+     */
     public ProductViewDTO getProduct(Long userId, Long productId)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -131,6 +151,12 @@ public class ProductService {
 
     }
 
+    /**
+     * This method  is used to get the variations of product
+     * @param userId
+     * @param variationId
+     * @return
+     */
     public ProductVariationGetDTO getProductVariation(Long userId, Long variationId)  {
 
         Optional<Product_Variation> productVariation = productVariationRepo.findById(variationId);
@@ -160,6 +186,11 @@ public class ProductService {
 
     }
 
+    /**
+     * This method is used to list all the products of particular seller
+     * @param userId
+     * @return
+     */
     public Set<ProductViewDTO> getProducts(Long userId) {
         List<Product> products = productRepository.findAllProducts(userId);
 
@@ -182,6 +213,12 @@ public class ProductService {
         return productViewDTOSet;
     }
 
+    /**
+     * This method is used to get all the variations of product
+     * @param userId
+     * @param productId
+     * @return
+     */
     public List<ProductVariationGetDTO> getProductVariations(Long userId, Long productId)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -216,6 +253,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * This method is uused to delete a particular product
+     * @param id
+     * @return
+     */
     @Transactional
     public String deleteProduct(Long id)  {
         if (!productRepository.findById(id).isPresent()) {
@@ -226,6 +268,13 @@ public class ProductService {
 
     }
 
+    /**
+     * This method is used to update the details of product
+     * @param userId
+     * @param productId
+     * @param productViewDto
+     * @return
+     */
     public String updateProduct(Long userId, Long productId, ProductViewDTO productViewDto)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -248,6 +297,14 @@ public class ProductService {
         }
     }
 
+    /**
+     * This method is  used to update the product name
+     * @param userId
+     * @param categoryId
+     * @param productId
+     * @param productViewDto
+     * @return
+     */
     public String updateProductName(Long userId, Long categoryId, Long productId, ProductViewDTO productViewDto)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -272,6 +329,13 @@ public class ProductService {
         }
     }
 
+    /**
+     * This method is used to update product variation details
+     * @param userId
+     * @param variationId
+     * @param productVariationDto
+     * @return
+     */
     public String updateProductVariation(Long userId, Long variationId, ProductVariationDTO productVariationDto)  {
 
         Optional<Product_Variation> productVariation = productVariationRepo.findById(variationId);
@@ -300,6 +364,11 @@ public class ProductService {
 
     }
 
+    /**
+     * This method is used to list all the products for admin
+     * @param productId
+     * @return
+     */
     public List<ProductVariationGetDTO> getProductForAdmin(Long productId)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -330,6 +399,11 @@ public class ProductService {
         return null;
     }
 
+    /**
+     * This method is used to list the product for user
+     * @param productId
+     * @return
+     */
     public List<ProductVariationGetDTO> getProductForUser(Long productId)  {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -365,6 +439,11 @@ public class ProductService {
         return null;
     }
 
+    /**
+     * This method is used to list all the product by category
+     * @param categoryId
+     * @return
+     */
     public AllProductDTO getAllProductsByCategoryId(Long categoryId)  {
 
         Optional<Category> category = categoryRepository.findById(categoryId);
@@ -396,6 +475,11 @@ public class ProductService {
 
     }
 
+    /**
+     * This method is used to activate the product
+     * @param productId
+     * @return
+     */
     public String activateProduct(Long productId) {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -410,6 +494,12 @@ public class ProductService {
             throw new BadRequestException("Product is already activated");
         }
     }
+
+    /**
+     * This method is used to deactivate the product
+     * @param productId
+     * @return
+     */
     public String deActivateProduct(Long productId) {
 
         Optional<Product> product = productRepository.findById(productId);
@@ -425,6 +515,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * This method is used to get the similar products
+     * @param productId
+     * @return
+     */
     public List<Product> getSimilarProducts(Long productId)  {
 
         Optional<Product> product = productRepository.findById(productId);

@@ -24,6 +24,9 @@ public class ProductVariantService {
 
     Logger logger = LoggerFactory.getLogger(ProductVariantService.class);
 
+    /**
+     * This method is  used to auto update the variant quantity
+     */
     public void autoUpdateVariationQuantity() {
 
         Iterable<Product_Variation> variations = productVariationRepo.findAll();
@@ -58,6 +61,12 @@ public class ProductVariantService {
         }
 
     }
+
+    /**
+     * This method is used to store the variant
+     * @param id
+     * @return
+     */
     public String saveVariant(Long id) {
 
         Optional<Product_Variation> product_variation = productVariationRepo.findById(id);
@@ -83,6 +92,13 @@ public class ProductVariantService {
             throw new NotFoundException("Invalid Product-Variation id");
         }
     }
+
+    /**
+     * This method is used to store the quantity
+     * @param variantId
+     * @param qty
+     * @return
+     */
     @Transactional
     @Modifying
     public String updateStoredQuantity (Long variantId, Integer qty) {
@@ -146,6 +162,11 @@ public class ProductVariantService {
         }
     }
 
+    /**
+     * This method is used to get the variant details
+     * @param vid
+     * @return
+     */
     public ProductVariant getVariant(String vid) {
 
         Optional<ProductVariant> productVariant = productVariantRepo.findById(vid);

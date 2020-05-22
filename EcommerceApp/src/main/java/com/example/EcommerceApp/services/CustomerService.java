@@ -54,6 +54,11 @@ public class CustomerService {
   @Autowired
   private UserRepository userRepository;
 
+    /**
+     * This method is used to get the list of customers
+     * @param id
+     * @return
+     */
     public CustomerProfileDTO getCustomerDetails(Long id){
         Optional<Customer> customer = customerRepository.findById(id);
        if(customer.isPresent()){
@@ -65,6 +70,12 @@ public class CustomerService {
            throw new NotFoundException("User Not Found");
        }
     }
+
+    /**
+     * This method is used to list the address field of particular customer
+     * @param id
+     * @return
+     */
     public MappingJacksonValue getCustomerAddresses(Long id){
         Optional<Customer> customer=customerRepository.findById(id);
         if(customer.isPresent()) {
@@ -84,6 +95,12 @@ public class CustomerService {
 
     }
 
+    /**
+     * This method is used to update the customer details
+     * @param profileDto
+     * @param id
+     * @return
+     */
     @Transactional
     @Modifying
     public String updateCustomer(CustomerProfileDTO profileDto, Long id){
@@ -102,6 +119,16 @@ public class CustomerService {
         }
 
     }
+
+    /**
+     * This method is used to update the password field of particular customer
+     * @param id
+     * @param oldPass
+     * @param newPass
+     * @param confirmPass
+     * @param httpServletResponse
+     * @return
+     */
     @Transactional
     @Modifying
     public String updatePassword(Long id, String oldPass, String newPass, String confirmPass, HttpServletResponse httpServletResponse) {
@@ -129,6 +156,13 @@ public class CustomerService {
         }
         return "Success";
     }
+
+    /**
+     * This method is used to add the address field of customer
+     * @param addressDto
+     * @param id
+     * @return
+     */
     public String addAddress(AddressDTO addressDto, Long id){
         Optional<Customer> customer=customerRepository.findById(id);
         if(customer.isPresent()){
@@ -142,6 +176,12 @@ public class CustomerService {
             throw new UserNotFoundException("USer Not Found");
         }
     }
+    /**
+     * This method is used to delete the address field of customer
+     * @param id
+     * @param request
+     * @return
+     */
     @Transactional
     public String deleteAddress(Long id, HttpServletRequest request) {
         Optional<Address> address = addressRepository.findById(id);
@@ -151,6 +191,14 @@ public class CustomerService {
         addressRepository.deleteById(id);
         return "Address Deleted";
     }
+
+    /**
+     * This method is used to update the address field of particular customer
+     * @param addressDto
+     * @param id
+     * @param userId
+     * @return
+     */
 
     @Transactional
     @Modifying
@@ -176,6 +224,12 @@ public class CustomerService {
             throw new NotFoundException("User not found");
         }
     }
+
+    /**
+     * This method is used to list the review of product
+     * @param reviewId
+     * @return
+     */
     public ReviewDTO viewProductReview(Long reviewId) {
         Optional<ProductReview> productReview = reviewRepository.findById(reviewId);
         if (productReview.isPresent()) {

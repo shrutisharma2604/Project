@@ -35,6 +35,13 @@ public class OrderService {
     @Autowired
     private OrderProductRepo orderProductRepo;
 
+    /**
+     * This method is used to place the order
+     * @param orders
+     * @param cid
+     * @param cartId
+     * @return
+     */
     public String placeOrder(Orders orders,Long cid,Long cartId ){
         Optional<Cart> cart=cartRepo.findById(cartId);
         if(cart.isPresent()){
@@ -95,7 +102,7 @@ public class OrderService {
 
                                 int remainingQty = qty-qty1;
 
-                                //Updating the qty after order in RedisDb....
+                                //Updating the qty after order in RedisDb
                                 productVariant.setQuantity(Integer.toString(remainingQty));
 
                                 productVariantRepo.save(productVariant);

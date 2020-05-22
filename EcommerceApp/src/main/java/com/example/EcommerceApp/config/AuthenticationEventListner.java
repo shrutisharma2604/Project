@@ -60,12 +60,13 @@ public class AuthenticationEventListner {
         try {
             userMap = (LinkedHashMap<String, String>) event.getAuthentication().getDetails();
         } catch (ClassCastException ex) {
-
+            ex.printStackTrace();
         }
         String userEmail = new String();
         try {
             userEmail = userMap.get("username");
         } catch (NullPointerException e) {
+            e.printStackTrace();
         }
         Optional<UserLoginAttempts> userLoginFailCounter = userAttemptsRepo.findByEmail(userEmail);
         if (userLoginFailCounter.isPresent()){

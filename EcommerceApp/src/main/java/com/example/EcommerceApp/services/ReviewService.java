@@ -31,6 +31,13 @@ public class ReviewService {
 
     Logger logger = LoggerFactory.getLogger(ReviewService.class);
 
+    /**
+     * This method is used to add the review for products
+     * @param reviewDTO
+     * @param cid
+     * @param pid
+     * @return
+     */
     public String addReview(ReviewDTO reviewDTO, Long cid, Long pid){
 
         Optional<User> customer = userRepository.findById(cid);

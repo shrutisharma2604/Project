@@ -29,6 +29,12 @@ public class CustomerActivateService {
     EmailNotificationService emailNotificationService;
 
     Logger logger = LoggerFactory.getLogger(CustomerActivateService.class);
+
+    /**
+     * This method is used to activate the customer by generating a token
+     * @param token
+     * @return
+     */
     @Transactional
     public String activateCustomer(String token) {
         CustomerActivate customerActivate = customerActivateRepo.findByToken(token);
@@ -72,6 +78,11 @@ public class CustomerActivateService {
         return "Success";
     }
 
+    /**
+     * This method is used to resend the activation link
+     * @param email
+     * @return
+     */
     @Transactional
     public String resendLink(String email) {
 

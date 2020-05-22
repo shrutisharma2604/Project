@@ -38,6 +38,12 @@ public class CategoryService {
     private ProductVariationRepo productVariationRepo;
 
     Logger logger = LoggerFactory.getLogger(CategoryService.class);
+
+    /**
+     * This method is used to add meta data
+     * @param fieldName
+     * @return
+     */
     public String addMetadata(String fieldName) {
         if (categoryMetaDataFieldRepo.findByName(fieldName) != null) {
             return  "field name already exist";
@@ -47,6 +53,16 @@ public class CategoryService {
         categoryMetaDataFieldRepo.save(metadata);
         return "Success " + categoryMetaDataFieldRepo.findByName(fieldName).getId();
     }
+
+    /**
+     * This method is used to view meta data field
+     * @param page
+     * @param size
+     * @param sortBy
+     * @param order
+     * @param query
+     * @return
+     */
 
     public List<CategoryMetaDataField> viewMetadata(String page, String size, String sortBy, String order, Optional<String> query) {
         if (query.isPresent()) {
@@ -58,6 +74,12 @@ public class CategoryService {
         return categoryMetadataFields;
     }
 
+    /**
+     * This method is used to add category
+     * @param name
+     * @param parentId
+     * @return
+     */
     public String addCategory(String name, Optional<Long> parentId) {
         Category category = new Category();
         if (parentId.isPresent()) {
@@ -95,6 +117,12 @@ public class CategoryService {
         return "Success" + categoryRepository.findByNameAndParentId(name,parentId.get()).getId();
     }
 
+    /**
+     * This method is used to delete the category
+     * @param id
+     * @return
+     */
+
    @Transactional
     public String deleteCategory(Long id) {
         if (!categoryRepository.findById(id).isPresent()) {
@@ -109,6 +137,13 @@ public class CategoryService {
         categoryRepository.deleteById(id);
         return "Success";
     }
+
+    /**
+     * This method is used to update the category
+     * @param name
+     * @param id
+     * @return
+     */
 
     public String updateCategory(String name,Long id) {
         if (!categoryRepository.findById(id).isPresent()) {
@@ -136,6 +171,11 @@ public class CategoryService {
         return "Success";
     }
 
+    /**
+     * This method is used to view particular category
+     * @param id
+     * @return
+     */
     public CategoryDTO viewCategory(Long id) {
         if (!categoryRepository.findById(id).isPresent()) {
             throw new NotFoundException(id + " category does not exist");
@@ -166,6 +206,15 @@ public class CategoryService {
         return categoryDto;
     }
 
+    /**
+     * This method is used to  list all categories
+     * @param page
+     * @param size
+     * @param sortBy
+     * @param order
+     * @param query
+     * @return
+     */
     public List<CategoryDTO> viewCategories(String page, String size, String sortBy, String order, Optional<String> query) {
         if (query.isPresent()) {
             Optional<Category> category = categoryRepository.findById(Long.parseLong(query.get()));
@@ -181,6 +230,11 @@ public class CategoryService {
         });
         return categoryDTOS;
     }
+
+    /**
+     * This method is used to view the leaf categories
+     * @return
+     */
     public List<CategoryDTO> viewLeafCategories() {
         List<Object> leafCategoryIds = categoryRepository.findLeafCategories();
         List<Object> categoryIds = categoryRepository.findCategoryId();
@@ -192,6 +246,12 @@ public class CategoryService {
         }
         return categoryDTOS;
     }
+
+    /**
+     * This method is used to view category same as parent category
+     * @param categoryId
+     * @return
+     */
     public List<Category> viewCategoriesSameParent(Optional<Long> categoryId) {
         if (categoryId.isPresent()) {
             if (!categoryRepository.findById(categoryId.get()).isPresent()) {
@@ -207,6 +267,12 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findRootCategories();
         return categories;
     }
+
+    /**
+     * This method is used to filter category
+     * @param categoryId
+     * @return
+     */
     public List<?> filterCategory(Long categoryId) {
         if (!categoryRepository.findById(categoryId).isPresent()) {
             throw new NotFoundException(categoryId + " category does not exist");
@@ -229,6 +295,11 @@ public class CategoryService {
         return categoryDTOS;
     }
 
+    /**
+     * This method is used in filterCategory method to filter the category
+     * @param id
+     * @return
+     */
     private FilterCategoryDTO filterCategoryProvider(Long id) {
         List<Object[]> categoryFieldValues = categoryMetaDataFieldValueRepo.findCategoryMetadataFieldValuesById(id);
         Set<HashMap<String,String>> filedValuesSet = new HashSet<>();
@@ -253,7 +324,12 @@ public class CategoryService {
         }
         return filterCategoryDTO;
     }
-    // add category meta data
+
+    /**
+     * This method is used add category meta data values
+     * @param categoryMetaDataFieldDTO
+     * @return
+     */
     public String addCategoryMetaData(CategoryMetaDataFieldDTO categoryMetaDataFieldDTO)  {
         Optional<Category> category=categoryRepository.findById(categoryMetaDataFieldDTO.getCategoryId());
         if(!category.isPresent()){
@@ -273,6 +349,13 @@ public class CategoryService {
         return "Category Meta Data Field added successfully";
 
     }
+
+    /**
+     * This method is used to update category meta data values
+     * @param categoryMetaDataFieldDTO
+     * @param id
+     * @return
+     */
     public String updateCategoryMetaData(CategoryMetaDataFieldDTO categoryMetaDataFieldDTO,Long id)  {
         Optional<Category> category=categoryRepository.findById(categoryMetaDataFieldDTO.getCategoryId());
         if(!category.isPresent()){

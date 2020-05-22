@@ -49,6 +49,12 @@ public class RegisterService {
     private AddressRepository addressRepository;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(EcommerceAppApplication.class);
+
+    /**
+     * This method is used to register the customer
+     * @param customerDto
+     * @return
+     */
     @Transactional
     public String registerCustomer(CustomerDTO customerDto) {
 
@@ -99,6 +105,11 @@ public class RegisterService {
         return "Registered Successfully";
     }
 
+    /**
+     * This method is used to register the seller
+     * @param sellerDto
+     * @return
+     */
     @Transactional
     public String registerSeller(SellerDTO sellerDto) {
         if (!gstValidation.validateGst(sellerDto.getGST())) {
