@@ -5,7 +5,11 @@ import com.example.EcommerceApp.dto.AddressDTO;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.CustomerProfileDTO;
 import com.example.EcommerceApp.dto.ReviewDTO;
-import com.example.EcommerceApp.entities.*;
+import com.example.EcommerceApp.entities.Address;
+import com.example.EcommerceApp.entities.Customer;
+import com.example.EcommerceApp.entities.ProductReview;
+import com.example.EcommerceApp.entities.User;
+import com.example.EcommerceApp.exception.BadRequestException;
 import com.example.EcommerceApp.exception.NotFoundException;
 import com.example.EcommerceApp.exception.UserNotFoundException;
 import com.example.EcommerceApp.repositories.AddressRepository;
@@ -17,12 +21,15 @@ import com.example.EcommerceApp.validation.PasswordValidation;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -54,6 +61,7 @@ public class CustomerService {
   @Autowired
   private UserRepository userRepository;
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(CustomerService.class);
     /**
      * This method is used to get the list of customers
      * @param id
@@ -107,10 +115,18 @@ public class CustomerService {
         Optional<Customer> customer=customerRepository.findById(id);
         BeanUtils.copyProperties(profileDto,customer);
         if(customer.isPresent()) {
-            customer.get().setFirstName(profileDto.getFirstName());
-            customer.get().setLastName(profileDto.getLastName());
-            customer.get().setContact(profileDto.getContact());
-            customer.get().setImage(profileDto.getImage());
+            if(profileDto.getFirstName()!=null) {
+                customer.get().setFirstName(profileDto.getFirstName());
+            }
+            if(profileDto.getLastName()!=null) {
+                customer.get().setLastName(profileDto.getLastName());
+            }
+            if(profileDto.getContact()!=null) {
+                if (profileDto.getContact().length() != 10) {
+                    throw new BadRequestException("contact is invalid");
+                }
+                customer.get().setContact(profileDto.getContact());
+            }
             customerRepository.save(customer.get());
             return "Profile updated successfully";
         }
@@ -173,7 +189,7 @@ public class CustomerService {
             return "Address added";
         }
         else {
-            throw new UserNotFoundException("USer Not Found");
+            throw new UserNotFoundException("User Not Found");
         }
     }
     /**
@@ -209,12 +225,24 @@ public class CustomerService {
             Optional<Address> address = addressRepository.findById(id);
             BeanUtils.copyProperties(addressDto, address);
             if (address.isPresent()) {
-                address.get().setAddress(addressDto.getAddress());
-                address.get().setCity(addressDto.getCity());
-                address.get().setCountry(addressDto.getCountry());
-                address.get().setLabel(addressDto.getLabel());
-                address.get().setState(addressDto.getState());
-                address.get().setZipCode(addressDto.getZipCode());
+                if(addressDto.getAddress()!=null){
+                    address.get().setAddress(addressDto.getAddress());
+                }
+                if(addressDto.getCity()!=null) {
+                    address.get().setCity(addressDto.getCity());
+                }
+                if(addressDto.getCountry()!=null) {
+                    address.get().setCountry(addressDto.getCountry());
+                }
+                if(addressDto.getLabel()!=null) {
+                    address.get().setLabel(addressDto.getLabel());
+                }
+                if(addressDto.getState()!=null) {
+                    address.get().setState(addressDto.getState());
+                }
+                if(addressDto.getZipCode()!=null) {
+                    address.get().setZipCode(addressDto.getZipCode());
+                }
                 addressRepository.save(address.get());
                 return "Address Updated Successfully";
             } else {

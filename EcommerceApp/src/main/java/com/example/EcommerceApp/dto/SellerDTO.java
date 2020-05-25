@@ -1,9 +1,8 @@
 package com.example.EcommerceApp.dto;
 
 import com.example.EcommerceApp.entities.Address;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+
+import javax.validation.constraints.*;
 import java.util.Set;
 
 public class SellerDTO {
@@ -37,6 +36,8 @@ public class SellerDTO {
     private String GST;
     @NotEmpty(message = "Please provide your company name")
     private String companyName;
+    @NotNull
+    @Size(max = 1,message = "seller can not have multiple addresses")
     private Set<Address> addresses;
     @NotEmpty(message = "Must provide company contact number")
     @Pattern(regexp="\\d{10}", message="Mobile number is invalid")

@@ -1,12 +1,15 @@
 package com.example.EcommerceApp.controller;
 
+import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
-import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.services.CustomerActivateService;
 import com.example.EcommerceApp.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -22,8 +25,8 @@ public class RegistrationController {
     private CustomerActivateService customerActivateService;
 
     @PostMapping(path = "/customer")
-    public String registerCustomer(@Valid @RequestBody CustomerDTO customerDto, HttpServletResponse httpServletResponse){
-       String message=registerService.registerCustomer(customerDto);
+    /* public String registerCustomer(@Valid @RequestBody CustomerDTO customerDto, HttpServletResponse httpServletResponse){
+      String message=registerService.registerCustomer(customerDto);
         System.out.println(message + "Customer");
         // content equals
         if ("Registered Successfully".equals(message)) {
@@ -31,10 +34,13 @@ public class RegistrationController {
         } else {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
-        return message;
-        /*httpServletResponse.setStatus(HttpServletResponse.SC_CREATED);
-        return registerService.registerCustomer(customerDto);*/
-    }
+        return message;*/
+        public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+            String message = registerService.registerCustomer(customerDTO);
+            return new ResponseEntity<>(message, HttpStatus.CREATED);
+
+        }
+
 
     @PostMapping(path = "/seller")
     public String registerSeller(@Valid @RequestBody SellerDTO sellerDto, HttpServletResponse httpServletResponse){

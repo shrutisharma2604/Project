@@ -1,11 +1,14 @@
 package com.example.EcommerceApp.services;
 
-import com.example.EcommerceApp.EcommerceAppApplication;
 import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.repositories.*;
+import com.example.EcommerceApp.exception.BadRequestException;
+import com.example.EcommerceApp.repositories.AddressRepository;
+import com.example.EcommerceApp.repositories.CustomerActivateRepo;
+import com.example.EcommerceApp.repositories.SellerRepository;
+import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
@@ -18,7 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class RegisterService {
@@ -48,7 +54,6 @@ public class RegisterService {
     @Autowired
     private AddressRepository addressRepository;
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(EcommerceAppApplication.class);
 
     /**
      * This method is used to register the customer
@@ -60,19 +65,19 @@ public class RegisterService {
 
         User user = userRepository.findByEmail(customerDto.getEmail());
         if(!emailValidation.validateEmail(customerDto.getEmail())){
-            LOGGER.error("Invalid email");
+            throw new BadRequestException("Invalid email");
         }
         if (userRepository.findByEmail(customerDto.getEmail())!=null) {
-                LOGGER.error("Email already exists");
+            throw new BadRequestException("Email already exists");
         }
         if (customerDto.getContact().length() != 10) {
-            LOGGER.error("contact is invalid");
+            throw new BadRequestException("contact is invalid");
         }
         if (!passwordValidation.isValid(customerDto.getPassword())) {
-                LOGGER.error("Password is invalid");
+            throw new BadRequestException("Password is invalid");
         }
         if (!customerDto.getPassword().equals(customerDto.getConfirmPassword())) {
-            return "Password does not match";
+            throw new BadRequestException("Password does not match");
         }
         customerDto.setPassword(passwordEncoder.encode(customerDto.getPassword()));
 
@@ -113,31 +118,28 @@ public class RegisterService {
     @Transactional
     public String registerSeller(SellerDTO sellerDto) {
         if (!gstValidation.validateGst(sellerDto.getGST())) {
-            LOGGER.error("gst is invalid");
+            throw new BadRequestException("gst is invalid");
         }
         if (!emailValidation.validateEmail(sellerDto.getEmail())) {
-           LOGGER.error("email is invalid");
+            throw new BadRequestException("email is invalid");
         }
         if (userRepository.findByEmail(sellerDto.getEmail()) != null) {
-            LOGGER.error("email already exist");
+            throw new BadRequestException("email already exist");
         }
         if (sellerRepository.findByCompanyName(sellerDto.getCompanyName()) != null) {
-            LOGGER.error("company name should be unique");
+            throw new BadRequestException("company name should be unique");
         }
         if (sellerRepository.findByGST(sellerDto.getGST()) != null) {
-            LOGGER.error("gst should be unique");
+            throw new BadRequestException("gst should be unique");
         }
         if (!passwordValidation.isValid(sellerDto.getPassword())) {
-            LOGGER.error("password in invalid");
+            throw new BadRequestException("password in invalid");
         }
         if (sellerDto.getCompanyContact().length() != 10) {
-            LOGGER.error("contact is invalid");
+            throw new BadRequestException("contact is invalid");
         }
         if(sellerDto.getAddresses().size() != 1) {
             return "Seller does not have multiple addresses";
-        }
-        if (!sellerDto.getPassword().equals(sellerDto.getConfirmPassword())) {
-            return "Password does not match";
         }
         sellerDto.setPassword(passwordEncoder.encode(sellerDto.getPassword()));
         Seller seller = new Seller();
@@ -151,14 +153,12 @@ public class RegisterService {
         seller.setLocked(false);
         seller.setExpired(false);
         seller.setAddresses(sellerDto.getAddresses());
-       /* Address address=new Address();
-        address.setUser(seller);
-        addressRepository.save(address);*/
         Set<Address> addresses = seller.getAddresses();
         addresses.forEach(address -> {
             Address addressSave = address;
             addressSave.setUser(seller);
         });
+
 
         CustomerActivate customerActivate = new CustomerActivate();
         customerActivate.setUserEmail(seller.getEmail());

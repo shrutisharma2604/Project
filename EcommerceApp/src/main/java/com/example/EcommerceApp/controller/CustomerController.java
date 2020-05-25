@@ -102,7 +102,7 @@ public class CustomerController {
     }
 
     //view review
-    @GetMapping(path = "/getCustomerDetails/{reviewId}")
+    @GetMapping(path = "/getCustomersDetails/{reviewId}")
     public ReviewDTO view(@PathVariable("reviewId") Long reviewId){
         return customerService.viewProductReview(reviewId);
     }

@@ -2,7 +2,6 @@ package com.example.EcommerceApp.controller;
 
 import com.example.EcommerceApp.dto.*;
 import com.example.EcommerceApp.entities.Category;
-import com.example.EcommerceApp.entities.ProductVariant;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.ProductService;
 import com.example.EcommerceApp.services.SellerService;
@@ -55,10 +54,6 @@ public class SellerController {
         }
     }
 
-    @PostMapping(path = "/{id}/address")
-    public String addAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "id") Long id){
-        return sellerService.addAddress(addressDto,id);
-    }
 
     @PutMapping(path = "/{userId}/address/{addressId}")
     public String updateAddress(@Valid @RequestBody AddressDTO addressDto, @PathVariable(value = "addressId") Long addressId, @PathVariable Long userId) {
