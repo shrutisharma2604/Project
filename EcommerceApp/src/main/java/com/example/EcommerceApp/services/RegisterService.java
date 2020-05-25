@@ -12,8 +12,6 @@ import com.example.EcommerceApp.repositories.UserRepository;
 import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,7 +62,7 @@ public class RegisterService {
     public String registerCustomer(CustomerDTO customerDto) {
 
         User user = userRepository.findByEmail(customerDto.getEmail());
-        if(!emailValidation.validateEmail(customerDto.getEmail())){
+      /*  if(!emailValidation.validateEmail(customerDto.getEmail())){
             throw new BadRequestException("Invalid email");
         }
         if (userRepository.findByEmail(customerDto.getEmail())!=null) {
@@ -78,7 +76,7 @@ public class RegisterService {
         }
         if (!customerDto.getPassword().equals(customerDto.getConfirmPassword())) {
             throw new BadRequestException("Password does not match");
-        }
+        }*/
         customerDto.setPassword(passwordEncoder.encode(customerDto.getPassword()));
 
 
