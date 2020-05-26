@@ -1,8 +1,10 @@
 package com.example.EcommerceApp.controller;
 
-import com.example.EcommerceApp.dto.*;
+import com.example.EcommerceApp.dto.AllProductDTO;
+import com.example.EcommerceApp.dto.CategoryDTO;
+import com.example.EcommerceApp.dto.CategoryMetaDataFieldDTO;
+import com.example.EcommerceApp.dto.ProductVariationGetDTO;
 import com.example.EcommerceApp.entities.CategoryMetaDataField;
-import com.example.EcommerceApp.entities.ProductVariant;
 import com.example.EcommerceApp.services.AdminService;
 import com.example.EcommerceApp.services.CategoryService;
 import com.example.EcommerceApp.services.ProductService;
@@ -11,7 +13,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.Cacheable;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

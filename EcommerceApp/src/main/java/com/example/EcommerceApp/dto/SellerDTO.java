@@ -36,7 +36,7 @@ public class SellerDTO {
     private String GST;
     @NotEmpty(message = "Please provide your company name")
     private String companyName;
-    @NotNull
+  //  @NotNull
     @Size(max = 1,message = "seller can not have multiple addresses")
     private Set<Address> addresses;
     @NotEmpty(message = "Must provide company contact number")

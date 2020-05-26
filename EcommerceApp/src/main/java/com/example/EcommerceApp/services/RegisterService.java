@@ -4,7 +4,6 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.exception.BadRequestException;
 import com.example.EcommerceApp.repositories.AddressRepository;
 import com.example.EcommerceApp.repositories.CustomerActivateRepo;
 import com.example.EcommerceApp.repositories.SellerRepository;
@@ -115,7 +114,7 @@ public class RegisterService {
      */
     @Transactional
     public String registerSeller(SellerDTO sellerDto) {
-        if (!gstValidation.validateGst(sellerDto.getGST())) {
+       /* if (!gstValidation.validateGst(sellerDto.getGST())) {
             throw new BadRequestException("gst is invalid");
         }
         if (!emailValidation.validateEmail(sellerDto.getEmail())) {
@@ -138,7 +137,7 @@ public class RegisterService {
         }
         if(sellerDto.getAddresses().size() != 1) {
             return "Seller does not have multiple addresses";
-        }
+        }*/
         sellerDto.setPassword(passwordEncoder.encode(sellerDto.getPassword()));
         Seller seller = new Seller();
         BeanUtils.copyProperties(sellerDto, seller);
@@ -150,12 +149,10 @@ public class RegisterService {
         seller.setActive(true);
         seller.setLocked(false);
         seller.setExpired(false);
-        seller.setAddresses(sellerDto.getAddresses());
-        Set<Address> addresses = seller.getAddresses();
-        addresses.forEach(address -> {
-            Address addressSave = address;
-            addressSave.setUser(seller);
-        });
+        Set<Address> addresses = sellerDto.getAddresses();
+        Address address=new Address();
+        address.setUser(seller);
+        addressRepository.save(address);
 
 
         CustomerActivate customerActivate = new CustomerActivate();

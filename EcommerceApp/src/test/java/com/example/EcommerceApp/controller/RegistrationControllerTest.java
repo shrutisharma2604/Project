@@ -74,24 +74,9 @@ class RegistrationControllerTest  {
     private TokenStore tokenStore;
 
 
-    /* @BeforeEach
-     public void setup() {
-         MockitoAnnotations.initMocks(this);
-
-         this.mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
-
-     }*/
     @Test
     public void registerCustomer() throws Exception {
         //Given
-    /*    CustomerDTO customerDTO=new CustomerDTO();
-        customerDTO.setFirstName("Shruti");
-        customerDTO.setLastName("Sharma");
-        customerDTO.setContact("9870737979");
-        customerDTO.setEmail("madhurisharma242@gmail.com");
-        customerDTO.setPassword("Shruti@26");
-        customerDTO.setConfirmPassword("Shruti@26");*/
-        //HttpServletResponse response = mock(HttpServletResponse.class);
         Mockito.when(javaMailSender.getHost()).thenReturn("qwertyuiop");
         Mockito.when(javaMailSender.getPort()).thenReturn(10000);
         Mockito.when(javaMailSender.getUsername()).thenReturn("qwertyui");
@@ -124,6 +109,7 @@ class RegistrationControllerTest  {
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .accept(MediaType.APPLICATION_JSON);
 
+        // then
         ResultActions resultAction =  mockMvc.perform(requestBuilder);
         MvcResult result = resultAction
              //   .andDo(MockMvcResultHandlers.print())
@@ -133,4 +119,84 @@ class RegistrationControllerTest  {
 
     }
 
+    @Test
+    public void registerSeller() throws Exception {
+        //Given
+        Mockito.when(javaMailSender.getHost()).thenReturn("qwertyuiop");
+        Mockito.when(javaMailSender.getPort()).thenReturn(10000);
+        Mockito.when(javaMailSender.getUsername()).thenReturn("qwertyui");
+        Mockito.when(javaMailSender.getPassword()).thenReturn("qwertyui");
+
+        List addresses = new ArrayList();
+
+        addresses.add(new JSONObject().put("address", "Rudrapur")
+                .put("city","Rudrapur")
+                .put("state","Uttarakhand")
+                .put("country","India")
+                .put("zipCode","263153")
+                .put("label","Home"));
+        String jsonString = new JSONObject()
+                .put("companyContact", "1234567899")
+                .put("companyName", "TCS")
+                .put("confirmPassword", "Tcs@1234")
+                .put("email", "pallavisharma3126@gmail.com")
+                .put("firstName", "Pallavi")
+                .put("gst", "18AABCT3518Q1ZV")
+                .put("lastName", "Sharma")
+                .put("password", "Tcs@1234")
+                .toString();
+        System.out.println(jsonString);
+
+        // when
+        RequestBuilder requestBuilder =  MockMvcRequestBuilders
+                .post("/register/seller" )
+                .content(jsonString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(SecurityMockMvcRequestPostProcessors.user("pallavisharma3126@gmail.com"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.APPLICATION_JSON);
+
+        // then
+        ResultActions resultAction =  mockMvc.perform(requestBuilder);
+        MvcResult result = resultAction
+                //   .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
+                .andReturn();
+        assertEquals("Registered Successfully",result.getResponse().getContentAsString());
+
+    }
+
+  /*  @Test
+    public void confirmAccountByCustomer() throws Exception{
+
+    }*/
+  String createToken() throws Exception {
+
+      RequestBuilder requestBuilder = MockMvcRequestBuilders
+              .post("/oauth/token")
+              .param("grant_type", "password")
+              .param("client_id", "live-test")
+              .param("username", "shrutisharma260419@gmail.com")
+              .param("password", "pass")
+              .param("client_secret", "abcde")
+              .contentType(MediaType.MULTIPART_FORM_DATA)
+
+              //.header("","")
+              .with(SecurityMockMvcRequestPostProcessors.user("shrutisharma260419@gmail.com"))
+              .with(SecurityMockMvcRequestPostProcessors.csrf())
+              .accept(MediaType.APPLICATION_JSON);
+
+
+      ResultActions resultAction =  mockMvc.perform(requestBuilder);
+      MvcResult result = resultAction
+              .andExpect(status().isOk())
+              .andReturn();
+
+      String token =  result.getResponse().getContentAsString();
+
+      System.out.println(token);
+
+      return token;
+
+  }
 }

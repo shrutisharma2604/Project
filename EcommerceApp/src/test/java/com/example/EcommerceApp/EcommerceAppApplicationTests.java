@@ -101,7 +101,6 @@ class EcommerceAppApplicationTests {
 		addresses.add(address);
 
 		customer.setAddresses(addresses);
-
 		// SAVING ROHIT
 		userRepository.save(customer);
 	}

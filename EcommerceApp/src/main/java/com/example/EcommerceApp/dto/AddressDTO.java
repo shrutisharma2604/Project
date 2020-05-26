@@ -1,7 +1,6 @@
 package com.example.EcommerceApp.dto;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 public class AddressDTO {
     private Long id;
@@ -13,7 +12,6 @@ public class AddressDTO {
     private String country;
     private String address;
     private String label;
-    @Size(max = 6)
     private Integer zipCode;
 
     public Long getId() {
