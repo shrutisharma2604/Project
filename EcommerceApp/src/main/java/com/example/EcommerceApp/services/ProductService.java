@@ -170,6 +170,7 @@ public class ProductService {
                     BeanUtils.copyProperties(productVariation.get(), productVariationGetDto);
                     productVariationGetDto.setProductId(productVariation.get().getProduct().getId());
                     productVariationGetDto.setProductName(productVariation.get().getProduct().getName());
+                    productVariationGetDto.setImageId(productVariation.get().getProduct().getImageId());
 
                     return productVariationGetDto;
 

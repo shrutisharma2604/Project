@@ -39,6 +39,7 @@ public class SellerController {
     public SellerProfileDTO getSellerProfile(@PathVariable("id") Long id){
         return sellerService.getSellerDetails(id);
     }
+
     @PutMapping(path = "/profile-update/{id}")
     public String updateProfile(@Valid @RequestBody SellerProfileDTO profileDto, @PathVariable("id") Long id){
         return sellerService.updateSeller(profileDto,id);

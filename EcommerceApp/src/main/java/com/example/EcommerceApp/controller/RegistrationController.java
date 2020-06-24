@@ -3,6 +3,7 @@ package com.example.EcommerceApp.controller;
 import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
+import com.example.EcommerceApp.security.GrantedAuthorityImpl;
 import com.example.EcommerceApp.services.CustomerActivateService;
 import com.example.EcommerceApp.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/register")
@@ -69,5 +71,10 @@ public class RegistrationController {
             httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         return message;
+    }
+
+    @GetMapping(path = "/role")
+    public List<GrantedAuthorityImpl> getRole(@RequestBody String email){
+        return registerService.fetchRole(email);
     }
 }

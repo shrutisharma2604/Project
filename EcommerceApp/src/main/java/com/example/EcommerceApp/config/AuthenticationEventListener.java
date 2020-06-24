@@ -4,6 +4,8 @@ import com.example.EcommerceApp.entities.User;
 import com.example.EcommerceApp.entities.UserLoginAttempts;
 import com.example.EcommerceApp.repositories.UserAttemptsRepo;
 import com.example.EcommerceApp.repositories.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
@@ -14,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Component
-public class AuthenticationEventListner {
+public class AuthenticationEventListener {
     @Autowired
     UserAttemptsRepo userAttemptsRepo;
 
@@ -23,6 +25,32 @@ public class AuthenticationEventListner {
 
     @Autowired
     EmailNotificationService emailNotificationService;
+
+        private static final Logger LOGGER = LogManager.getLogger(AuthenticationEventListener.class);
+
+
+
+    @EventListener
+    public void authenticationPass(AuthenticationSuccessEvent event) {
+        String username = "";
+        LinkedHashMap<String, String> userMap = new LinkedHashMap<>();
+
+        try {
+            userMap = (LinkedHashMap<String, String>) event.getAuthentication().getPrincipal();
+        } catch (ClassCastException ex) {
+            LOGGER.error("ClassCastException --{}", ex);
+        }
+
+        try {
+            username = userMap.get("username");
+        } catch (NullPointerException e) {
+            LOGGER.error("NullPointerException --{}", e);
+        }
+        Optional<UserLoginAttempts> userLoginFailCounter = userAttemptsRepo.findByEmail(username);
+        if (userLoginFailCounter.isPresent()){
+            userAttemptsRepo.deleteById(userLoginFailCounter.get().getId());
+        }
+    }
 
     @EventListener
     public void authenticationFailed(AuthenticationFailureBadCredentialsEvent event) {
@@ -41,6 +69,8 @@ public class AuthenticationEventListner {
             System.out.println(counter);
             if (counter>=2) {
                 User user = userRepository.findByEmail(userEmail);
+
+
                 user.setLocked(true);
                 emailNotificationService.sendNotification("ACCOUNT LOCKED","YOUR ACCOUNT HAS BEEN LOCKED",userEmail);
                 userRepository.save(user);
@@ -52,26 +82,6 @@ public class AuthenticationEventListner {
             userAttemptsRepo.save(userLoginFailCounter1);
         }
 
-    }
-
-    @EventListener
-    public void authenticationPass(AuthenticationSuccessEvent event) {
-        LinkedHashMap<String,String> userMap = new LinkedHashMap<>();
-        try {
-            userMap = (LinkedHashMap<String, String>) event.getAuthentication().getDetails();
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
-        }
-        String userEmail = new String();
-        try {
-            userEmail = userMap.get("username");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        Optional<UserLoginAttempts> userLoginFailCounter = userAttemptsRepo.findByEmail(userEmail);
-        if (userLoginFailCounter.isPresent()){
-            userAttemptsRepo.deleteById(userLoginFailCounter.get().getId());
-        }
     }
 
 }

@@ -4,10 +4,8 @@ import com.example.EcommerceApp.config.EmailNotificationService;
 import com.example.EcommerceApp.dto.CustomerDTO;
 import com.example.EcommerceApp.dto.SellerDTO;
 import com.example.EcommerceApp.entities.*;
-import com.example.EcommerceApp.repositories.AddressRepository;
-import com.example.EcommerceApp.repositories.CustomerActivateRepo;
-import com.example.EcommerceApp.repositories.SellerRepository;
-import com.example.EcommerceApp.repositories.UserRepository;
+import com.example.EcommerceApp.repositories.*;
+import com.example.EcommerceApp.security.GrantedAuthorityImpl;
 import com.example.EcommerceApp.validation.EmailValidation;
 import com.example.EcommerceApp.validation.GstValidation;
 import com.example.EcommerceApp.validation.PasswordValidation;
@@ -18,10 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class RegisterService {
@@ -50,6 +45,9 @@ public class RegisterService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     /**
@@ -165,6 +163,20 @@ public class RegisterService {
 
         userRepository.save(seller);
         return "Registered Successfully";
+    }
+
+    public List<GrantedAuthorityImpl> fetchRole(String email){
+        User user=userRepository.findByEmail(email);
+        if(email!=null) {
+            List<GrantedAuthorityImpl> authorities = new ArrayList<>();
+            user.getRoles().forEach(role -> {
+                GrantedAuthorityImpl grantAuthority = new GrantedAuthorityImpl(role.getAuthority());
+                authorities.add(grantAuthority);
+                System.out.println("authority" + authorities);
+            });
+            return authorities;
+        }
+        return null;
     }
 
 }

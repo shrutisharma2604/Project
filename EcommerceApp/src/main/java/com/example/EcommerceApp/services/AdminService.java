@@ -185,7 +185,7 @@ public class AdminService {
 
     public MappingJacksonValue registeredCustomers(String page,String size, String SortBy){
         List<Customer> customers = customerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","active");
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","active","contact");
         FilterProvider filterProvider =  new SimpleFilterProvider().addFilter("CustomerFilter",filter);
 
         MappingJacksonValue message = new MappingJacksonValue(customers);
@@ -205,7 +205,7 @@ public class AdminService {
     public MappingJacksonValue registeredSellers(String page,String size, String SortBy){
         List<Seller> sellers = sellerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
 
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","active","companyName","companyContact","addresses");
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","gst","active","deleted","expired","locked","companyName","companyContact","addresses");
         FilterProvider filterProvider =  new SimpleFilterProvider().addFilter("Seller-Filter",filter);
 
         MappingJacksonValue message = new MappingJacksonValue(sellers);

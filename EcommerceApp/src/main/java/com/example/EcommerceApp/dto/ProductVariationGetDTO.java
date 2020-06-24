@@ -1,18 +1,13 @@
 package com.example.EcommerceApp.dto;
 
-import net.minidev.json.JSONObject;
-
-import javax.persistence.Lob;
 
 public class ProductVariationGetDTO {
     private Long id;
     private Long price;
-
-    @Lob
-    private JSONObject metadata;
     private int quantity;
     private boolean isActive;
 
+    private Long imageId;
     private Long productId;
 
     private String productName;
@@ -31,14 +26,6 @@ public class ProductVariationGetDTO {
 
     public void setPrice(Long price) {
         this.price = price;
-    }
-
-    public JSONObject getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(JSONObject metadata) {
-        this.metadata = metadata;
     }
 
     public int getQuantity() {
@@ -73,14 +60,22 @@ public class ProductVariationGetDTO {
         this.productName = productName;
     }
 
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
     @Override
     public String toString() {
         return "ProductVariationGetDTO{" +
                 "id=" + id +
                 ", price=" + price +
-                ", metadata=" + metadata +
                 ", quantity=" + quantity +
                 ", isActive=" + isActive +
+                ", imageId=" + imageId +
                 ", productId=" + productId +
                 ", productName='" + productName + '\'' +
                 '}';

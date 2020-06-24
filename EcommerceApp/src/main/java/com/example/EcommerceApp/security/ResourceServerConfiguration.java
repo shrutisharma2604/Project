@@ -65,7 +65,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/cart/**").permitAll()
                 .antMatchers("/order/**").permitAll()
                 .antMatchers("/product/variant/**").permitAll()
-                .antMatchers("/logout/**").hasAnyRole("ADMIN","CUSTOMER","SELLER")
+                .antMatchers("/logout/**").permitAll()//hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .antMatchers("/admin/home/**").permitAll()//hasAnyRole("ADMIN")
                 .antMatchers("/customer/home/**").permitAll()//hasAnyRole("CUSTOMER")
                 .antMatchers("/seller/home/**").hasAnyRole("SELLER")
@@ -73,6 +73,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/user/home/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .formLogin().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable();
